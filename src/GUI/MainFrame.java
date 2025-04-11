@@ -7,12 +7,10 @@ import GUI.Panel.*;
 import java.awt.*;
 
 public class MainFrame extends JFrame {
-	 private static final long serialVersionUID = 1L; 
-	 
+	private static final long serialVersionUID = 1L; 
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private JLabel lblTitle;
-    // private JButton btnBook, btnDVD, btnCD, btnLP;
     private int bookCount;
     private int dvdCount;
     private int cdCount;

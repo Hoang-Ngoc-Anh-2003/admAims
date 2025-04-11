@@ -7,19 +7,17 @@ public abstract class Product {
     protected int productId;
     protected String title;
     protected String category;
-    protected BigDecimal value;// gia nhap
-    protected BigDecimal price;// gia ban
+    protected BigDecimal value;
+    protected BigDecimal price;
     protected String barcode;
     protected String description;
     protected int quantity;
-    protected BigDecimal weight;
+    protected String weight;
     protected String dimensions;
     protected Date warehouseEntryDate;
 
-    // All
     public Product(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
-            String description, int quantity, BigDecimal weight, String dimensions, Date warehouseEntryDate,
-            String imageUrl) {
+            String description, int quantity, String weight, String dimensions, Date warehouseEntryDate) {
         this.productId = productId;
         this.title = title;
         this.category = category;
@@ -50,11 +48,11 @@ public abstract class Product {
         this.title = title;
     }
 
-    public String getCategory() {  // Thêm getter cho category
+    public String getCategory() {  
         return category;
     }
 
-    public void setCategory(String category) {  // Thêm setter cho category
+    public void setCategory(String category) {
         this.category = category;
     }
 
@@ -98,11 +96,11 @@ public abstract class Product {
         this.quantity = quantity;
     }
 
-    public BigDecimal getWeight() {
+    public String getWeight() {
         return weight;
     }
 
-    public void setWeight(BigDecimal weight) {
+    public void setWeight(String weight) {
         this.weight = weight;
     }
 

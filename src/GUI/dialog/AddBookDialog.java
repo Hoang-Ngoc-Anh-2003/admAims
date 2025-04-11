@@ -241,7 +241,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.gridx = 0;
         gbcImport.gridy = 2;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Giá bản :"), gbcImport); // Đổi label "Giá bán" thành "Giá bản"
+        importInfoPanel.add(new JLabel("Giá bán :"), gbcImport);
 
         gbcImport.gridx = 1;
         gbcImport.gridy = 2;

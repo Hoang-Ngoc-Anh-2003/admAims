@@ -13,13 +13,12 @@ public class DVD extends Product {
     private Date releaseDate;  // Ngày phát hành
     private String genre;      // Thể loại
 
-    public DVD(int productId, String title, BigDecimal value, BigDecimal price, String barcode,
-               String description, int quantity, BigDecimal weight, String dimensions,
-               Date warehouseEntryDate, String imageUrl, String discType, String director,
+    public DVD(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
+    String description, int quantity, String weight, String dimensions, Date warehouseEntryDate, String discType, String director,
                int runtime, String studio, String language, String subtitles, Date releaseDate,
                String genre) {
         super(productId, title, "dvd", value, price, barcode, description, quantity, weight,
-              dimensions, warehouseEntryDate, imageUrl);
+              dimensions, warehouseEntryDate);
         this.discType = discType;
         this.director = director;
         this.runtime = runtime;

@@ -54,13 +54,15 @@ public class CDPanel extends JPanel {
         table.getTableHeader().setBackground(new Color(220, 220, 220));
         table.getTableHeader().setReorderingAllowed(false);
         
-        // Load dữ liệu từ database
+        // Cố định kích thước cột Hành động
         TableColumn actionColumn = table.getColumnModel().getColumn(5);
         actionColumn.setPreferredWidth(150);
         actionColumn.setMaxWidth(180);
         actionColumn.setMinWidth(180);
 
         JScrollPane scrollPane = new JScrollPane(table);
+
+        // Load dữ liệu từ database
         loadCDs();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
@@ -111,6 +113,6 @@ public class CDPanel extends JPanel {
                 cd.getPrice(), cd.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng CD lấy được: " + cds.size());
+        System.out.println("So luong CD: " + cds.size());
     }
 }

@@ -13,8 +13,8 @@ public class CDDAO extends ProductDAO {
         String sql = "SELECT p.product_id, p.title, p.category, p.value, p.price, p.barcode, " +
                      "p.description, p.quantity, p.weight, p.dimensions, p.warehouse_entry_date, " +
                      "c.artists, c.record_label, c.tracklist, c.genre, c.release_date " +
-                     "FROM Products p " +
-                     "INNER JOIN CDs c ON p.product_id = c.cd_id " +
+                     "FROM products p " +
+                     "INNER JOIN cds c ON p.product_id = c.cd_id " +
                      "WHERE p.category = 'CD'";
     
         try (Connection conn = DatabaseConnection.getConnection();
@@ -25,15 +25,15 @@ public class CDDAO extends ProductDAO {
                 CD cd = new CD(
                     rs.getInt("product_id"),
                     rs.getString("title"),
+                    rs.getString("category"), 
                     rs.getBigDecimal("value"),
                     rs.getBigDecimal("price"),
                     rs.getString("barcode"),
                     rs.getString("description"),
                     rs.getInt("quantity"),
-                    rs.getBigDecimal("weight"),
+                    rs.getString("weight"),
                     rs.getString("dimensions"),
                     rs.getDate("warehouse_entry_date"),
-                    null, // Image chưa xử lý
                     rs.getString("artists"),
                     rs.getString("record_label"),
                     rs.getString("tracklist"),
@@ -92,15 +92,15 @@ public class CDDAO extends ProductDAO {
         return new CD(
             rs.getInt("product_id"),
             rs.getString("title"),
+            rs.getString("category"),
             rs.getBigDecimal("value"),
             rs.getBigDecimal("price"),
             rs.getString("barcode"),
             rs.getString("description"),
             rs.getInt("quantity"),
-            rs.getBigDecimal("weight"),
+            rs.getString("weight"),
             rs.getString("dimensions"),
             rs.getDate("warehouse_entry_date"),
-            rs.getString("image_url"),
             rs.getString("artists"),
             rs.getString("record_label"),
             rs.getString("tracklist"),

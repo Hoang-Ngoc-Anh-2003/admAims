@@ -10,12 +10,11 @@ public class CD extends Product {
     private String genre;        // Thể loại
     private Date releaseDate;    // Ngày phát hành
 
-    public CD(int productId, String title, BigDecimal value, BigDecimal price, String barcode,
-              String description, int quantity, BigDecimal weight, String dimensions,
-              Date warehouseEntryDate, String imageUrl, String artists, String recordLabel,
-              String tracklist, String genre, Date releaseDate) {
-        super(productId, title, "cd", value, price, barcode, description, quantity, weight,
-              dimensions, warehouseEntryDate, imageUrl);
+    public CD(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
+            String description, int quantity, String weight, String dimensions, Date warehouseEntryDate, String artists,
+            String recordLabel, String tracklist, String genre, Date releaseDate) {
+        super(productId, title, "cd", value, price, barcode, description, quantity, weight, dimensions,
+                warehouseEntryDate);
         this.artists = artists;
         this.recordLabel = recordLabel;
         this.tracklist = tracklist;

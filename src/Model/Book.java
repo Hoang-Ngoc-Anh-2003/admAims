@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class Book extends Product {
-    private String authors;     // Danh sách tác giả
+    private String authors;     // tác giả
     private String coverType;   // Loại bìa (paperback, hardcover)
     private String publisher;   // Nhà xuất bản
     private Date publicationDate; // Ngày xuất bản
@@ -12,12 +12,11 @@ public class Book extends Product {
     private String language;    // Ngôn ngữ
     private String genre;       // Thể loại
 
-    public Book(int productId, String title, BigDecimal value, BigDecimal price, String barcode,
-                String description, int quantity, BigDecimal weight, String dimensions,
-                Date warehouseEntryDate, String imageUrl, String authors, String coverType,
-                String publisher, Date publicationDate, int numPages, String language, String genre) {
-        super(productId, title, "book", value, price, barcode, description, quantity, weight,
-              dimensions, warehouseEntryDate, imageUrl);
+    public Book(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
+            String description, int quantity, String weight, String dimensions, Date warehouseEntryDate, String authors,
+            String coverType, String publisher, Date publicationDate, int numPages, String language, String genre) {
+        super(productId, title, "book", value, price, barcode, description, quantity, weight, dimensions,
+                warehouseEntryDate);
         this.authors = authors;
         this.coverType = coverType;
         this.publisher = publisher;
@@ -26,17 +25,6 @@ public class Book extends Product {
         this.language = language;
         this.genre = genre;
     }
-
-    public Book( int product_id, String title, String authors, BigDecimal price, int quantity) {
-        super( product_id, title, price, quantity); // Gọi constructor của Product
-        this.authors = authors;
-    }
-
-    public Book( String title, String authors, BigDecimal price, int quantity) {
-        super( title, price, quantity); // Gọi constructor của Product
-        this.authors = authors;
-    }
-    
 
     // Getters & Setters
     public String getAuthors() {

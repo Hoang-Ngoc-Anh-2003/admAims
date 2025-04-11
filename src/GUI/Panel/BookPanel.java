@@ -117,5 +117,6 @@ public class BookPanel extends JPanel {
                     book.getPrice(), book.getQuantity(), ""
             });
         }
+        System.out.println("So luong book: " + books.size());
     }
 }
