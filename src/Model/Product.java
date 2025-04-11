@@ -7,20 +7,19 @@ public abstract class Product {
     protected int productId;
     protected String title;
     protected String category;
-    protected BigDecimal value;
-    protected BigDecimal price;
+    protected BigDecimal value;// gia nhap
+    protected BigDecimal price;// gia ban
     protected String barcode;
     protected String description;
     protected int quantity;
     protected BigDecimal weight;
     protected String dimensions;
     protected Date warehouseEntryDate;
-    protected String imageUrl;
 
-    // Constructor
-    public Product(int productId, String title, String category, BigDecimal value, BigDecimal price,
-                   String barcode, String description, int quantity, BigDecimal weight,
-                   String dimensions, Date warehouseEntryDate, String imageUrl) {
+    // All
+    public Product(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
+            String description, int quantity, BigDecimal weight, String dimensions, Date warehouseEntryDate,
+            String imageUrl) {
         this.productId = productId;
         this.title = title;
         this.category = category;
@@ -32,24 +31,6 @@ public abstract class Product {
         this.weight = weight;
         this.dimensions = dimensions;
         this.warehouseEntryDate = warehouseEntryDate;
-        this.imageUrl = imageUrl;
-    }
-
-    public Product(int product_id, String title, BigDecimal price, int quantity) {
-        this.productId = product_id;
-        this.title = title;
-        this.price = price;
-        this.quantity = quantity;
-    }
-
-    public Product( String title, BigDecimal price, int quantity) {
-        this.title = title;
-        this.price = price;
-        this.quantity = quantity;
-    }
-    
-    public Product(int productId) {  // Constructor cần thiết
-        this.productId = productId;
     }
 
     // Getters & Setters
@@ -139,13 +120,5 @@ public abstract class Product {
 
     public void setWarehouseEntryDate(Date warehouseEntryDate) {
         this.warehouseEntryDate = warehouseEntryDate;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 }
