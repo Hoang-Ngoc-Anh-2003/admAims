@@ -1,20 +1,17 @@
 package Model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class Book extends Product {
     private String authors;     // tác giả
     private String coverType;   // Loại bìa (paperback, hardcover)
     private String publisher;   // Nhà xuất bản
-    private Date publicationDate; // Ngày xuất bản
+    private String publicationDate; // Ngày xuất bản
     private int numPages;       // Số trang
     private String language;    // Ngôn ngữ
     private String genre;       // Thể loại
 
-    public Book(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
-            String description, int quantity, String weight, String dimensions, Date warehouseEntryDate, String authors,
-            String coverType, String publisher, Date publicationDate, int numPages, String language, String genre) {
+    public Book(int productId, String title, String category, double value, double price, String barcode,
+            String description, int quantity, String weight, String dimensions, String warehouseEntryDate, String authors,
+            String coverType, String publisher, String publicationDate, int numPages, String language, String genre) {
         super(productId, title, "book", value, price, barcode, description, quantity, weight, dimensions,
                 warehouseEntryDate);
         this.authors = authors;
@@ -51,11 +48,11 @@ public class Book extends Product {
         this.publisher = publisher;
     }
 
-    public Date getPublicationDate() {
+    public String getPublicationDate() {
         return publicationDate;
     }
 
-    public void setPublicationDate(Date publicationDate) {
+    public void setPublicationDate(String publicationDate) {
         this.publicationDate = publicationDate;
     }
 

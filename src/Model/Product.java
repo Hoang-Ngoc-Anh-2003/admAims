@@ -1,23 +1,20 @@
 package Model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public abstract class Product {
     protected int productId;
     protected String title;
     protected String category;
-    protected BigDecimal value;
-    protected BigDecimal price;
+    protected double value;
+    protected double price;
     protected String barcode;
     protected String description;
     protected int quantity;
     protected String weight;
     protected String dimensions;
-    protected Date warehouseEntryDate;
+    protected String warehouseEntryDate;
 
-    public Product(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
-            String description, int quantity, String weight, String dimensions, Date warehouseEntryDate) {
+    public Product(int productId, String title, String category, double value, double price, String barcode,
+            String description, int quantity, String weight, String dimensions, String warehouseEntryDate) {
         this.productId = productId;
         this.title = title;
         this.category = category;
@@ -56,19 +53,19 @@ public abstract class Product {
         this.category = category;
     }
 
-    public BigDecimal getValue() {
+    public double getValue() {
         return value;
     }
 
-    public void setValue(BigDecimal value) {
+    public void setValue(double value) {
         this.value = value;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -112,11 +109,11 @@ public abstract class Product {
         this.dimensions = dimensions;
     }
 
-    public Date getWarehouseEntryDate() {
+    public String getWarehouseEntryDate() {
         return warehouseEntryDate;
     }
 
-    public void setWarehouseEntryDate(Date warehouseEntryDate) {
+    public void setWarehouseEntryDate(String warehouseEntryDate) {
         this.warehouseEntryDate = warehouseEntryDate;
     }
 }

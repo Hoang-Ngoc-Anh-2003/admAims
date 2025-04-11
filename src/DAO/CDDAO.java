@@ -26,19 +26,19 @@ public class CDDAO extends ProductDAO {
                     rs.getInt("product_id"),
                     rs.getString("title"),
                     rs.getString("category"), 
-                    rs.getBigDecimal("value"),
-                    rs.getBigDecimal("price"),
+                    rs.getDouble("value"),
+                    rs.getDouble("price"),
                     rs.getString("barcode"),
                     rs.getString("description"),
                     rs.getInt("quantity"),
                     rs.getString("weight"),
                     rs.getString("dimensions"),
-                    rs.getDate("warehouse_entry_date"),
+                    rs.getString("warehouse_entry_date"),
                     rs.getString("artists"),
                     rs.getString("record_label"),
                     rs.getString("tracklist"),
                     rs.getString("genre"),
-                    rs.getDate("release_date")
+                    rs.getString("release_date")
                 );
                 cds.add(cd);
             }
@@ -93,19 +93,19 @@ public class CDDAO extends ProductDAO {
             rs.getInt("product_id"),
             rs.getString("title"),
             rs.getString("category"),
-            rs.getBigDecimal("value"),
-            rs.getBigDecimal("price"),
+            rs.getDouble("value"),
+            rs.getDouble("price"),
             rs.getString("barcode"),
             rs.getString("description"),
             rs.getInt("quantity"),
             rs.getString("weight"),
             rs.getString("dimensions"),
-            rs.getDate("warehouse_entry_date"),
+            rs.getString("warehouse_entry_date"),
             rs.getString("artists"),
             rs.getString("record_label"),
             rs.getString("tracklist"),
             rs.getString("genre"),
-            rs.getDate("release_date")
+            rs.getString("release_date")
         );
     }
 }

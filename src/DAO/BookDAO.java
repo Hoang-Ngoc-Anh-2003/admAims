@@ -26,18 +26,18 @@ public class BookDAO extends ProductDAO {
                     rs.getInt("product_id"),
                     rs.getString("title"),
                     rs.getString("category"),
-                    rs.getBigDecimal("value"),
-                    rs.getBigDecimal("price"),
+                    rs.getDouble("value"),
+                    rs.getDouble("price"),
                     rs.getString("barcode"),
                     rs.getString("description"),
                     rs.getInt("quantity"),
                     rs.getString("weight"),
                     rs.getString("dimensions"),
-                    rs.getDate("warehouse_entry_date"),
+                    rs.getString("warehouse_entry_date"),
                     rs.getString("authors"),
                     rs.getString("cover_type"),
                     rs.getString("publisher"),
-                    rs.getDate("publication_date"),
+                    rs.getString("publication_date"),
                     rs.getInt("num_pages"),
                     rs.getString("language"),
                     rs.getString("genre")
@@ -51,50 +51,75 @@ public class BookDAO extends ProductDAO {
         return books;
     }
 
+    private String generateUniqueBarcode(Connection conn) throws SQLException {
+        String barcode;
+        boolean isUnique = false;
+        do {
+            barcode = String.format("%013d", (long)(Math.random() * 1_000_000_000_0000L));
+            String checkSql = "SELECT COUNT(*) FROM Products WHERE barcode = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(checkSql)) {
+                stmt.setString(1, barcode);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    isUnique = true;
+                }
+            }
+        } while (!isUnique);
+        return barcode;
+    }    
+
     // Thêm sách mới
-    // public boolean addBook(Book book) {
-    //     String productSQL = "INSERT INTO Products (title, category, value, price, barcode, description, quantity, weight, dimensions, warehouse_entry_date) " +
-    //                         "VALUES (?, 'book', ?, ?, ?, ?, ?, ?, ?, ?) RETURNING product_id";
-    //     String bookSQL = "INSERT INTO Books (book_id, authors, cover_type, publisher, publication_date, num_pages, language, genre) " +
-    //                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        
-    //     try (Connection conn = DatabaseConnection.getConnection();
-    //          PreparedStatement productStmt = conn.prepareStatement(productSQL);
-    //          PreparedStatement bookStmt = conn.prepareStatement(bookSQL)) {
+    public boolean addBook(Book book) {
+        String productSQL = "INSERT INTO Products (title, category, value, price, barcode, description, quantity, weight, dimensions, warehouse_entry_date) " +
+                            "VALUES (?, 'book', ?, ?, ?, ?, ?, ?, ?, ?) RETURNING product_id";
+        String bookSQL = "INSERT INTO Books (book_id, authors, cover_type, publisher, publication_date, num_pages, language, genre) " +
+                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(productSQL);
+             PreparedStatement bookStmt = conn.prepareStatement(bookSQL)) {
+    
+            // Tạo barcode ngẫu nhiên và đảm bảo không trùng
+            String barcode = generateUniqueBarcode(conn);
+            book.setBarcode(barcode); // cập nhật lại barcode trong Book
+    
+            // Thêm vào bảng Products
+            productStmt.setString(1, book.getTitle());
+            productStmt.setDouble(2, book.getValue());
+            productStmt.setDouble(3, book.getPrice());
+            productStmt.setString(4, barcode);
+            productStmt.setString(5, book.getDescription());
+            productStmt.setInt(6, book.getQuantity());
+            productStmt.setString(7, book.getWeight());
+            productStmt.setString(8, book.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(book.getWarehouseEntryDate()));
 
-    //         // Thêm vào Products
-    //         productStmt.setString(1, book.getTitle());
-    //         productStmt.setBigDecimal(2, book.getValue());
-    //         productStmt.setBigDecimal(3, book.getPrice());
-    //         productStmt.setString(4, book.getBarcode());
-    //         productStmt.setString(5, book.getDescription());
-    //         productStmt.setInt(6, book.getQuantity());
-    //         productStmt.setString(7, book.getWeight());
-    //         productStmt.setString(8, book.getDimensions());
-    //         productStmt.setDate(9, new java.sql.Date(book.getWarehouseEntryDate().getTime()));
-
-    //         ResultSet rs = productStmt.executeQuery();
-    //         if (rs.next()) {
-    //             int productId = rs.getInt(1);
-
-    //             // Thêm vào Books
-    //             bookStmt.setInt(1, productId);
-    //             bookStmt.setString(2, book.getAuthors());
-    //             bookStmt.setString(3, book.getCoverType());
-    //             bookStmt.setString(4, book.getPublisher());
-    //             bookStmt.setDate(5, new java.sql.Date(book.getPublicationDate().getTime()));
-    //             bookStmt.setInt(6, book.getNumPages());
-    //             bookStmt.setString(7, book.getLanguage());
-    //             bookStmt.setString(8, book.getGenre());
-
-    //             int rowsInserted = bookStmt.executeUpdate();
-    //             return rowsInserted > 0;
-    //         }
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return false;
-    // }
+    
+            ResultSet rs = productStmt.executeQuery();
+            if (rs.next()) {
+                int productId = rs.getInt(1);
+                book.setProductId(productId); // cập nhật lại productId
+    
+                // Thêm vào bảng Books
+                bookStmt.setInt(1, productId);
+                bookStmt.setString(2, book.getAuthors());
+                bookStmt.setString(3, book.getCoverType());
+                bookStmt.setString(4, book.getPublisher());
+                bookStmt.setDate(5, java.sql.Date.valueOf(book.getPublicationDate()));
+                bookStmt.setInt(6, book.getNumPages());
+                bookStmt.setString(7, book.getLanguage());
+                bookStmt.setString(8, book.getGenre());
+    
+                int rowsInserted = bookStmt.executeUpdate();
+                return rowsInserted > 0;
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 
     // Cập nhật sách
     // public boolean updateBook(Book book) {
@@ -176,21 +201,31 @@ public class BookDAO extends ProductDAO {
             rs.getInt("product_id"),
             rs.getString("title"),
             rs.getString("category"),
-            rs.getBigDecimal("value"),
-            rs.getBigDecimal("price"),
+            rs.getDouble("value"),
+            rs.getDouble("price"),
             rs.getString("barcode"),
             rs.getString("description"),
             rs.getInt("quantity"),
             rs.getString("weight"),
             rs.getString("dimensions"),
-            rs.getDate("warehouse_entry_date"),
+            rs.getString("warehouse_entry_date"),
             rs.getString("authors"),
             rs.getString("cover_type"),
             rs.getString("publisher"),
-            rs.getDate("publication_date"),
+            rs.getString("publication_date"),
             rs.getInt("num_pages"),
             rs.getString("language"),
             rs.getString("genre")
         );
     }
+
+    private static BookDAO instance;
+
+    public static BookDAO getInstance() {
+        if (instance == null) {
+            instance = new BookDAO();
+        }
+        return instance;
+    }
+
 }

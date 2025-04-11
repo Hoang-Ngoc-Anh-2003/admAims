@@ -1,18 +1,15 @@
 package Model;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
 public class LP extends Product {
     private String artists;      // Danh sách nghệ sĩ
     private String recordLabel;  // Hãng thu âm
     private String tracklist;    // Danh sách bài hát
     private String genre;        // Thể loại
-    private Date releaseDate;    // Ngày phát hành
+    private String releaseDate;    // Ngày phát hành
 
-    public LP(int productId, String title, String category, BigDecimal value, BigDecimal price, String barcode,
-    String description, int quantity, String weight, String dimensions, Date warehouseEntryDate, String artists, String recordLabel,
-              String tracklist, String genre, Date releaseDate) {
+    public LP(int productId, String title, String category, double value, double price, String barcode,
+    String description, int quantity, String weight, String dimensions, String warehouseEntryDate, String artists, String recordLabel,
+              String tracklist, String genre, String releaseDate) {
         super(productId, title, "lp", value, price, barcode, description, quantity, weight,
               dimensions, warehouseEntryDate);
         this.artists = artists;
@@ -55,11 +52,11 @@ public class LP extends Product {
         this.genre = genre;
     }
 
-    public Date getReleaseDate() {
+    public String getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(String releaseDate) {
         this.releaseDate = releaseDate;
     }
 }
