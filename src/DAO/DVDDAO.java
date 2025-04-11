@@ -53,6 +53,23 @@ public class DVDDAO extends ProductDAO {
     
         return dvds;
     }
+
+    private String generateUniqueBarcode(Connection conn) throws SQLException {
+        String barcode;
+        boolean isUnique = false;
+        do {
+            barcode = String.format("%013d", (long)(Math.random() * 1_000_000_000_0000L));
+            String checkSql = "SELECT COUNT(*) FROM Products WHERE barcode = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(checkSql)) {
+                stmt.setString(1, barcode);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    isUnique = true;
+                }
+            }
+        } while (!isUnique);
+        return barcode;
+    }    
     
 
     public DVD getDVDById(int productId) {
@@ -88,6 +105,53 @@ public class DVDDAO extends ProductDAO {
         return count;
     }
     
+    public boolean addDVD(DVD dvd) {
+        String productSQL = "INSERT INTO Products (title, category, value, price, barcode, description, quantity, weight, dimensions, warehouse_entry_date) " +
+                            "VALUES (?, 'DVD', ?, ?, ?, ?, ?, ?, ?, ?) RETURNING product_id";
+        String dvdSQL = "INSERT INTO DVDs (dvd_id, disc_type, director, runtime, studio, language, subtitles, release_date, genre) " +
+                        "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(productSQL);
+             PreparedStatement dvdStmt = conn.prepareStatement(dvdSQL)) {
+    
+            String barcode = generateUniqueBarcode(conn);
+            dvd.setBarcode(barcode);
+    
+            productStmt.setString(1, dvd.getTitle());
+            productStmt.setDouble(2, dvd.getValue());
+            productStmt.setDouble(3, dvd.getPrice());
+            productStmt.setString(4, barcode);
+            productStmt.setString(5, dvd.getDescription());
+            productStmt.setInt(6, dvd.getQuantity());
+            productStmt.setString(7, dvd.getWeight());
+            productStmt.setString(8, dvd.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(dvd.getWarehouseEntryDate()));
+    
+            ResultSet rs = productStmt.executeQuery();
+            if (rs.next()) {
+                int productId = rs.getInt(1);
+                dvd.setProductId(productId);
+    
+                dvdStmt.setInt(1, productId);
+                dvdStmt.setString(2, dvd.getDiscType());
+                dvdStmt.setString(3, dvd.getDirector());
+                dvdStmt.setInt(4, dvd.getRuntime());
+                dvdStmt.setString(5, dvd.getStudio());
+                dvdStmt.setString(6, dvd.getLanguage());
+                dvdStmt.setString(7, dvd.getSubtitles());
+                dvdStmt.setDate(8, java.sql.Date.valueOf(dvd.getReleaseDate()));
+                dvdStmt.setString(9, dvd.getGenre());
+    
+                return dvdStmt.executeUpdate() > 0;
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    
 
     private DVD mapResultSetToDVD(ResultSet rs) throws SQLException {
         return new DVD(
@@ -112,4 +176,14 @@ public class DVDDAO extends ProductDAO {
             rs.getString("genre")
         );
     }
+
+    private static DVDDAO instance;
+
+    public static DVDDAO getInstance() {
+        if (instance == null) {
+            instance = new DVDDAO();
+        }
+        return instance;
+    }
+    
 }

@@ -90,9 +90,9 @@ public class DVDPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(DVDPanel.this);
-                AddDVDDialog addBookDialog = new AddDVDDialog(parentFrame, "Thêm CD", true); // Thêm title và modal
-                addBookDialog.setVisible(true);
-                if (addBookDialog.isSaveClicked()) { // Kiểm tra nếu nút "Lưu" đã được nhấn (nếu bạn đã thêm logic này vào AddBookDialog)
+                AddDVDDialog addDVDDialog = new AddDVDDialog(parentFrame, "Thêm CD", true); // Thêm title và modal
+                addDVDDialog.setVisible(true);
+                if (addDVDDialog.isSaveClicked()) {
                 loadDVDs();
                 }
             }

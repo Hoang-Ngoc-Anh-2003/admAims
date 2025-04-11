@@ -10,17 +10,14 @@ import Model.*;
 import DAO.*;
 import javax.swing.border.TitledBorder;
 
-public class AddBookDialog extends JDialog {
+public class AddLPDialog extends JDialog { 
 
-    private JTextField bookTitleTextField;
-    private JTextField authorTextField;
-    private JTextField publisherTextField;
-    private JTextField pageCountTextField;
-    private JComboBox<String> languageComboBox;
-    private JComboBox<String> genreComboBox;
-    private JFormattedTextField publishDateTextField; // Sử dụng JFormattedTextField cho định dạng ngày
-    private JRadioButton paperbackRadioButton;
-    private JRadioButton hardcoverRadioButton;
+    private JTextField titleTextField;
+    private JTextField artistTextField;
+    private JTextField recordLabelTextField;
+    private JTextField genreTextField;
+    private JFormattedTextField releaseDateTextField; // Sử dụng JFormattedTextField cho định dạng ngày
+    private JTextArea trackListTextArea;
     private JFormattedTextField importDateTextField; // Sử dụng JFormattedTextField cho định dạng ngày
     private JTextField quantityTextField;
     private JTextField dimensionsTextField;
@@ -34,7 +31,7 @@ public class AddBookDialog extends JDialog {
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
 
-    public AddBookDialog(JFrame parent, String title, boolean modal) {
+    public AddLPDialog(JFrame parent, String title, boolean modal) {
         super(parent, title, modal);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
@@ -48,141 +45,99 @@ public class AddBookDialog extends JDialog {
         gbc.weightx = 0.5;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // --- Thông tin chung ---
-        JPanel generalInfoPanel = new JPanel(new GridBagLayout());
-        generalInfoPanel.setBorder(new TitledBorder("Thông tin chung"));
-        GridBagConstraints gbcGeneral = new GridBagConstraints();
-        gbcGeneral.fill = GridBagConstraints.HORIZONTAL;
-        gbcGeneral.weightx = 0.5;
-        gbcGeneral.insets = new Insets(5, 5, 5, 5);
+        // --- Thông tin LP ---
+        JPanel LPInfoPanel = new JPanel(new GridBagLayout());
+        LPInfoPanel.setBorder(new TitledBorder("Thông tin chung"));
+        GridBagConstraints gbcLP = new GridBagConstraints();
+        gbcLP.fill = GridBagConstraints.HORIZONTAL;
+        gbcLP.weightx = 0.5;
+        gbcLP.insets = new Insets(5, 5, 5, 5);
 
-        // Hàng 1: Tên sách - Số trang
-        gbcGeneral.gridx = 0;
-        gbcGeneral.gridy = 0;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Tên sách :"), gbcGeneral);
+        // Hàng 1: Tiêu đề - Hãng thu
+        gbcLP.gridx = 0;
+        gbcLP.gridy = 0;
+        gbcLP.insets = labelMargin;
+        LPInfoPanel.add(new JLabel("Tiêu đề :"), gbcLP);
 
-        gbcGeneral.gridx = 1;
-        gbcGeneral.gridy = 0;
-        gbcGeneral.insets = fieldMargin;
-        generalInfoPanel.add(bookTitleTextField = new JTextField(20), gbcGeneral);
+        gbcLP.gridx = 1;
+        gbcLP.gridy = 0;
+        gbcLP.insets = fieldMargin;
+        LPInfoPanel.add(titleTextField = new JTextField(20), gbcLP);
 
-        gbcGeneral.gridx = 2;
-        gbcGeneral.gridy = 0;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Số trang :"), gbcGeneral);
+        gbcLP.gridx = 2;
+        gbcLP.gridy = 0;
+        gbcLP.insets = labelMargin;
+        LPInfoPanel.add(new JLabel("Hãng thu :"), gbcLP);
 
-        gbcGeneral.gridx = 3;
-        gbcGeneral.gridy = 0;
-        gbcGeneral.insets = fieldMargin;
-        pageCountTextField = new JTextField(10);
-        generalInfoPanel.add(pageCountTextField, gbcGeneral);
+        gbcLP.gridx = 3;
+        gbcLP.gridy = 0;
+        gbcLP.insets = fieldMargin;
+        recordLabelTextField = new JTextField(20);
+        LPInfoPanel.add(recordLabelTextField, gbcLP);
 
-        // Hàng 2: Tác giả - Ngôn ngữ
-        gbcGeneral.gridx = 0;
-        gbcGeneral.gridy = 1;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Tác giả :"), gbcGeneral);
+        // Hàng 2: Nghệ sĩ - Thể loại
+        gbcLP.gridx = 0;
+        gbcLP.gridy = 1;
+        gbcLP.insets = labelMargin;
+        LPInfoPanel.add(new JLabel("Nghệ sĩ :"), gbcLP);
 
-        gbcGeneral.gridx = 1;
-        gbcGeneral.gridy = 1;
-        gbcGeneral.insets = fieldMargin;
-        generalInfoPanel.add(authorTextField = new JTextField(20), gbcGeneral);
+        gbcLP.gridx = 1;
+        gbcLP.gridy = 1;
+        gbcLP.insets = fieldMargin;
+        LPInfoPanel.add(artistTextField = new JTextField(20), gbcLP);
 
-        gbcGeneral.gridx = 2;
-        gbcGeneral.gridy = 1;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Ngôn ngữ :"), gbcGeneral);
+        gbcLP.gridx = 2;
+        gbcLP.gridy = 1;
+        gbcLP.insets = labelMargin;
+        LPInfoPanel.add(new JLabel("Thể loại :"), gbcLP);
 
-        gbcGeneral.gridx = 3;
-        gbcGeneral.gridy = 1;
-        gbcGeneral.insets = fieldMargin;
-        languageComboBox = new JComboBox<>(new String[]{"Tiếng Việt", "Tiếng Anh", "Khác"});
-        generalInfoPanel.add(languageComboBox, gbcGeneral);
+        gbcLP.gridx = 3;
+        gbcLP.gridy = 1;
+        gbcLP.insets = fieldMargin;
+        genreTextField = new JTextField(20);
+        LPInfoPanel.add(genreTextField, gbcLP);
 
-        // Hàng 3: Nhà xuất bản - Thể loại
-        gbcGeneral.gridx = 0;
-        gbcGeneral.gridy = 2;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Nhà xuất bản :"), gbcGeneral);
+        // Hàng 3: Ngày phát hành - Danh sách bài hát
+        gbcLP.gridx = 0;
+        gbcLP.gridy = 2;
+        gbcLP.insets = labelMargin;
+        gbcLP.anchor = GridBagConstraints.NORTHWEST; // Neo label lên trên
+        LPInfoPanel.add(new JLabel("Ngày phát hành :"), gbcLP);
 
-        gbcGeneral.gridx = 1;
-        gbcGeneral.gridy = 2;
-        gbcGeneral.insets = fieldMargin;
-        generalInfoPanel.add(publisherTextField = new JTextField(20), gbcGeneral);
+        gbcLP.gridx = 1;
+        gbcLP.gridy = 2;
+        gbcLP.insets = fieldMargin;
+        gbcLP.anchor = GridBagConstraints.NORTHWEST; // Neo textField lên trên
+        releaseDateTextField = new JFormattedTextField();
+        releaseDateTextField.setColumns(20);
+        LPInfoPanel.add(releaseDateTextField, gbcLP);
+        gbcLP.anchor = GridBagConstraints.WEST; // Trả lại anchor mặc định
 
-        gbcGeneral.gridx = 2;
-        gbcGeneral.gridy = 2;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Thể loại :"), gbcGeneral);
+        gbcLP.gridx = 2;
+        gbcLP.gridy = 2;
+        gbcLP.insets = labelMargin;
+        gbcLP.anchor = GridBagConstraints.NORTHWEST; // Neo label lên trên
+        LPInfoPanel.add(new JLabel("Danh sách bài hát :"), gbcLP);
 
-        gbcGeneral.gridx = 3;
-        gbcGeneral.gridy = 2;
-        gbcGeneral.insets = fieldMargin;
-        genreComboBox = new JComboBox<>(new String[]{"Tiểu thuyết", "Truyện ngắn", "Trinh thám", "Kinh dị", "Khác"});
-        generalInfoPanel.add(genreComboBox, gbcGeneral);
-
-        // Hàng 4: Ngày xuất bản
-        gbcGeneral.gridx = 0;
-        gbcGeneral.gridy = 3;
-        gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Ngày xuất bản :"), gbcGeneral);
-
-        gbcGeneral.gridx = 1;
-        gbcGeneral.gridy = 3;
-        gbcGeneral.insets = fieldMargin;
-        publishDateTextField = new JFormattedTextField();
-        publishDateTextField.setColumns(20);
-        generalInfoPanel.add(publishDateTextField, gbcGeneral);
-        gbcGeneral.gridwidth = 3; // Để trống cột bên phải
-        gbcGeneral.gridx = 2;
-        generalInfoPanel.add(new JLabel(""), gbcGeneral); // Spacer
-        gbcGeneral.gridwidth = 1; // Reset
+        gbcLP.gridx = 3;
+        gbcLP.gridy = 2;
+        gbcLP.gridwidth = GridBagConstraints.REMAINDER; // Chiếm toàn bộ không gian còn lại bên phải
+        gbcLP.gridheight = 2; // Cho phép JTextArea có chiều cao 2 hàng (hoặc hơn nếu cần)
+        gbcLP.insets = fieldMargin;
+        gbcLP.fill = GridBagConstraints.BOTH; // Lấp đầy cả chiều ngang và dọc
+        LPInfoPanel.add(new JScrollPane(trackListTextArea = new JTextArea(3, 20)), gbcLP);
+        gbcLP.gridwidth = 1; // Trả lại gridwidth mặc định
+        gbcLP.gridheight = 1; // Trả lại gridheight mặc định
+        gbcLP.fill = GridBagConstraints.HORIZONTAL; // Trả lại fill mặc định
 
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 4;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        contentPanel.add(generalInfoPanel, gbc);
+        gbc.fill = GridBagConstraints.BOTH; // Fill cả chiều ngang và dọc cho panel thông tin LP
+        gbc.weighty = 0.0; // Reset weighty
+        contentPanel.add(LPInfoPanel, gbc);
         gbc.gridwidth = 1; // Reset gridwidth
-
-        // --- Thông tin bìa ---
-        JPanel coverInfoPanel = new JPanel(new GridBagLayout());
-        coverInfoPanel.setBorder(new TitledBorder("Thông tin bìa"));
-        GridBagConstraints gbcCover = new GridBagConstraints();
-        gbcCover.fill = GridBagConstraints.HORIZONTAL;
-        gbcCover.weightx = 0.5;
-        gbcCover.insets = new Insets(5, 5, 5, 5);
-
-        // Hàng 1: Loại bìa
-        gbcCover.gridx = 0;
-        gbcCover.gridy = 0;
-        gbcCover.insets = labelMargin;
-        coverInfoPanel.add(new JLabel("Loại bìa :"), gbcCover);
-
-        gbcCover.gridx = 1;
-        gbcCover.gridy = 0;
-        gbcCover.gridwidth = 3;
-        gbcCover.insets = fieldMargin;
-        JPanel coverTypePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        paperbackRadioButton = new JRadioButton("paperback");
-        hardcoverRadioButton = new JRadioButton("hardcover");
-        ButtonGroup coverTypeGroup = new ButtonGroup();
-        coverTypeGroup.add(paperbackRadioButton);
-        coverTypeGroup.add(hardcoverRadioButton);
-
-        coverTypePanel.add(paperbackRadioButton);
-        coverTypePanel.add(Box.createHorizontalStrut(30)); // Thêm khoảng trống 20 pixel
-        coverTypePanel.add(hardcoverRadioButton);
-        coverInfoPanel.add(coverTypePanel, gbcCover);
-        gbcCover.gridwidth = 1; // Reset gridwidth
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = 4;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        contentPanel.add(coverInfoPanel, gbc);
-        gbc.gridwidth = 1; // Reset gridwidth
+        gbc.fill = GridBagConstraints.HORIZONTAL; // Trả lại fill mặc định
 
         // --- Thông tin nhập kho ---
         JPanel importInfoPanel = new JPanel(new GridBagLayout());
@@ -263,7 +218,7 @@ public class AddBookDialog extends JDialog {
         importInfoPanel.add(importPriceTextField, gbcImport);
 
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 1;
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         contentPanel.add(importInfoPanel, gbc);
@@ -276,7 +231,7 @@ public class AddBookDialog extends JDialog {
         descriptionPanel.add(new JScrollPane(descriptionTextArea), BorderLayout.CENTER);
 
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 2;
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weighty = 1.0; // Cho phép mô tả chiếm nhiều không gian dọc
@@ -296,7 +251,7 @@ public class AddBookDialog extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveBook();
+                saveLP();
             }
         });
 
@@ -314,15 +269,12 @@ public class AddBookDialog extends JDialog {
 
     public boolean isSaveClicked() { return isSaveClicked; }
     // Các phương thức getter
-    public String getBookTitle() { return bookTitleTextField.getText(); }
-    public String getAuthor() { return authorTextField.getText(); }
-    public String getPublisher() { return publisherTextField.getText(); }
-    public String getPageCount() { return pageCountTextField.getText(); }
-    public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
-    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
-    public String getPublishDate() { return publishDateTextField.getText(); }
-    public boolean isPaperback() { return paperbackRadioButton.isSelected(); }
-    public boolean isHardcover() { return hardcoverRadioButton.isSelected(); }
+    public String getTitle() { return titleTextField.getText(); }
+    public String getArtist() { return artistTextField.getText(); }
+    public String getRecordLabel() { return recordLabelTextField.getText(); }
+    public String getGenre() { return genreTextField.getText(); }
+    public String getReleaseDate() { return releaseDateTextField.getText(); }
+    public String getTrackList() { return trackListTextArea.getText(); }
     public String getImportDate() { return importDateTextField.getText(); }
     public String getQuantity() { return quantityTextField.getText(); }
     public String getDimensions() { return dimensionsTextField.getText(); }
@@ -331,39 +283,36 @@ public class AddBookDialog extends JDialog {
     public String getImportPrice() { return importPriceTextField.getText(); }
     public String getDescription() { return descriptionTextArea.getText(); }
 
-    private void saveBook() {
+    private void saveLP() {
         try {
             // Lấy dữ liệu từ form
-            String title = bookTitleTextField.getText().trim();
-            String authors = authorTextField.getText().trim();
-            String publisher = publisherTextField.getText().trim();
-            int numPages = Integer.parseInt(pageCountTextField.getText().trim());
-            String language = (String) languageComboBox.getSelectedItem();
-            String genre = (String) genreComboBox.getSelectedItem();
-            String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
-            String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
+            String title = titleTextField.getText().trim();
             String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-            int quantity = Integer.parseInt(quantityTextField.getText().trim());
             String dimensions = dimensionsTextField.getText().trim();
             String weight = weightTextField.getText().trim();
+            String description = descriptionTextArea.getText().trim();
             double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
             double price  = Double.parseDouble(importPriceTextField.getText().trim());
-            String description = descriptionTextArea.getText().trim();
+            int quantity = Integer.parseInt(quantityTextField.getText().trim());
+
+            String artists = artistTextField.getText().trim();
+            String recordLabel = recordLabelTextField.getText().trim();
+            String tracklist = trackListTextArea.getText().trim();
+            String genre = genreTextField.getText();
+            String releaseDate = releaseDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
 
             // Kiểm tra dữ liệu bắt buộc
-            if (title.isEmpty() || authors.isEmpty() || publicationDate.isEmpty() || warehouseEntryDate.isEmpty()) {
+            if (title.isEmpty() || title.isEmpty() || artists.isEmpty() || warehouseEntryDate.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
-            // Tạo đối tượng Book
-            Book book = new Book(0, title, "book", value, price, "0", description,
-            quantity, weight, dimensions, warehouseEntryDate,authors,
-            coverType, publisher, publicationDate, numPages,
-            language, genre);
+            // Tạo đối tượng LP
+            LP LP = new LP(0, title, "LP", value, price, "0", description,
+            quantity, weight, dimensions, warehouseEntryDate,artists, recordLabel, tracklist, genre, releaseDate);
 
             // Gọi DAO để lưu vào database
-            boolean success = BookDAO.getInstance().addBook(book);
+            boolean success = LPDAO.getInstance().addLP(LP);
             if (success) {
                 JOptionPane.showMessageDialog(this, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 isSaveClicked = true;
@@ -377,6 +326,6 @@ public class AddBookDialog extends JDialog {
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
-    }
+    }   
 
 }

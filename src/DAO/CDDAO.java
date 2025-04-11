@@ -50,6 +50,67 @@ public class CDDAO extends ProductDAO {
         return cds;
     }
     
+    private String generateUniqueBarcode(Connection conn) throws SQLException {
+        String barcode;
+        boolean isUnique = false;
+        do {
+            barcode = String.format("%013d", (long)(Math.random() * 1_000_000_000_0000L));
+            String checkSql = "SELECT COUNT(*) FROM Products WHERE barcode = ?";
+            try (PreparedStatement stmt = conn.prepareStatement(checkSql)) {
+                stmt.setString(1, barcode);
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    isUnique = true;
+                }
+            }
+        } while (!isUnique);
+        return barcode;
+    }
+    
+    public boolean addCD(CD cd) {
+        String productSQL = "INSERT INTO Products (title, category, value, price, barcode, description, quantity, weight, dimensions, warehouse_entry_date) " +
+                            "VALUES (?, 'CD', ?, ?, ?, ?, ?, ?, ?, ?) RETURNING product_id";
+        String cdSQL = "INSERT INTO CDs (cd_id, artists, record_label, tracklist, genre, release_date) " +
+                       "VALUES (?, ?, ?, ?, ?, ?)";
+    
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(productSQL);
+             PreparedStatement cdStmt = conn.prepareStatement(cdSQL)) {
+    
+            String barcode = generateUniqueBarcode(conn);
+            cd.setBarcode(barcode);
+    
+            productStmt.setString(1, cd.getTitle());
+            productStmt.setDouble(2, cd.getValue());
+            productStmt.setDouble(3, cd.getPrice());
+            productStmt.setString(4, barcode);
+            productStmt.setString(5, cd.getDescription());
+            productStmt.setInt(6, cd.getQuantity());
+            productStmt.setString(7, cd.getWeight());
+            productStmt.setString(8, cd.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(cd.getWarehouseEntryDate()));
+    
+            ResultSet rs = productStmt.executeQuery();
+            if (rs.next()) {
+                int productId = rs.getInt(1);
+                cd.setProductId(productId);
+    
+                cdStmt.setInt(1, productId);
+                cdStmt.setString(2, cd.getArtists());
+                cdStmt.setString(3, cd.getRecordLabel());
+                cdStmt.setString(4, cd.getTracklist());
+                cdStmt.setString(5, cd.getGenre());
+                cdStmt.setDate(6, java.sql.Date.valueOf(cd.getReleaseDate()));
+    
+                return cdStmt.executeUpdate() > 0;
+            }
+    
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }    
+
 
     public CD getCDById(int productId) {
         String sql = "SELECT * FROM Products JOIN CDs ON Products.product_id = CDs.product_id WHERE Products.product_id = ?";
@@ -108,4 +169,14 @@ public class CDDAO extends ProductDAO {
             rs.getString("release_date")
         );
     }
+
+    private static CDDAO instance;
+
+    public static CDDAO getInstance() {
+        if (instance == null) {
+            instance = new CDDAO();
+        }
+        return instance;
+    }
+
 }

@@ -11,7 +11,7 @@ import Model.CD;
 import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
-import GUI.dialog.AddCD_LPDialog;
+import GUI.dialog.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -95,9 +95,9 @@ public class CDPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(CDPanel.this);
-                AddCD_LPDialog addBookDialog = new AddCD_LPDialog(parentFrame, "Thêm CD", true); // Thêm title và modal
-                addBookDialog.setVisible(true);
-                if (addBookDialog.isSaveClicked()) { // Kiểm tra nếu nút "Lưu" đã được nhấn (nếu bạn đã thêm logic này vào AddBookDialog)
+                AddCDDialog addCDDialog = new AddCDDialog(parentFrame, "Thêm CD", true); // Thêm title và modal
+                addCDDialog.setVisible(true);
+                if (addCDDialog.isSaveClicked()) { // Kiểm tra nếu nút "Lưu" đã được nhấn (nếu bạn đã thêm logic này vào AddBookDialog)
                 loadCDs();
                 }
             }
