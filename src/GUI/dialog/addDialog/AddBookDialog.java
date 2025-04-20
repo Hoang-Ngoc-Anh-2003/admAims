@@ -314,24 +314,6 @@ public class AddBookDialog extends JDialog {
     }
 
     public boolean isSaveClicked() { return isSaveClicked; }
-    // Các phương thức getter
-    public String getBookTitle() { return bookTitleTextField.getText(); }
-    public String getAuthor() { return authorTextField.getText(); }
-    public String getPublisher() { return publisherTextField.getText(); }
-    public String getPageCount() { return pageCountTextField.getText(); }
-    public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
-    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
-    public String getPublishDate() { return publishDateTextField.getText(); }
-    public boolean isPaperback() { return paperbackRadioButton.isSelected(); }
-    public boolean isHardcover() { return hardcoverRadioButton.isSelected(); }
-    public String getImportDate() { return importDateTextField.getText(); }
-    public String getQuantity() { return quantityTextField.getText(); }
-    public String getDimensions() { return dimensionsTextField.getText(); }
-    public String getWeight() { return weightTextField.getText(); }
-    public String getSellingPrice() { return sellingPriceTextField.getText(); }
-    public String getImportPrice() { return importPriceTextField.getText(); }
-    public String getDescription() { return descriptionTextArea.getText(); }
-
     private void saveBook() {
         try {
             // Lấy dữ liệu từ form

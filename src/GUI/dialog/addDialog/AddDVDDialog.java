@@ -321,26 +321,7 @@ public class AddDVDDialog extends JDialog {
         setLocationRelativeTo(parent);
     }
 
-    public boolean isSaveClicked() { return isSaveClicked; }
-    // Các phương thức getter (tương tự như trước, cần cập nhật theo các field mới)
-    public String getTitle() { return titleTextField.getText(); }
-    public String getDirector() { return directorTextField.getText(); }
-    public String getDuration() { return durationTextField.getText(); }
-    public String getProductionCompany() { return productionCompanyTextField.getText(); }
-    public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
-    public String getSubtitle() { return (String) subtitleComboBox.getSelectedItem(); }
-    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
-    public String getReleaseDate() { return releaseDateTextField.getText(); }
-    public boolean isBluray() { return blurayRadioButton.isSelected(); }
-    public boolean isHDDVD() { return hdvddRadioButton.isSelected(); }
-    public String getImportDate() { return importDateTextField.getText(); }
-    public String getQuantity() { return quantityTextField.getText(); }
-    public String getDimensions() { return dimensionsTextField.getText(); }
-    public String getWeight() { return weightTextField.getText(); }
-    public String getSellingPrice() { return sellingPriceTextField.getText(); }
-    public String getImportPrice() { return importPriceTextField.getText(); }
-    public String getDescription() { return descriptionTextArea.getText(); }
-
+    public boolean isSaveClicked() { return isSaveClicked; } 
     private void saveDVD() {
         try {
             // Lấy dữ liệu từ form

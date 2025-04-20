@@ -12,11 +12,12 @@ import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
 import GUI.dialog.addDialog.AddDVDDialog;
+import Interface.ReloadablePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class DVDPanel extends JPanel {
+public class DVDPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
@@ -74,7 +75,7 @@ public class DVDPanel extends JPanel {
         // Đặt renderer cho cột cuối cùng (Hành động)
         // Áp dụng EditButtonRenderer và EditButtonAction
         table.getColumnModel().getColumn(5).setCellRenderer(new EditButtonRenderer());
-        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table));
+        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table, this));
 
 
         
@@ -91,7 +92,7 @@ public class DVDPanel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(DVDPanel.this);
-                AddDVDDialog addDVDDialog = new AddDVDDialog(parentFrame, "Thêm CD", true); // Thêm title và modal
+                AddDVDDialog addDVDDialog = new AddDVDDialog(parentFrame, "Thêm DVD", true); // Thêm title và modal
                 addDVDDialog.setVisible(true);
                 if (addDVDDialog.isSaveClicked()) {
                 loadDVDs();
@@ -100,7 +101,7 @@ public class DVDPanel extends JPanel {
         });
     }
 
-    private void loadDVDs() {
+    public void loadDVDs() {
         List<DVD> dvds = dvdDAO.getAllDVDs();
         tableModel.setRowCount(0);
         for (DVD dvd : dvds) {
@@ -109,5 +110,10 @@ public class DVDPanel extends JPanel {
                 dvd.getPrice(), dvd.getQuantity(), ""
             });
         }
+    }
+
+    @Override
+    public void reloadData() {
+        loadDVDs(); // gọi method load hiện tại
     }
 }

@@ -319,7 +319,7 @@ public class EditBookDialog extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // saveEditedBook();
+                saveEditedBook();
             }
         });
 
@@ -334,16 +334,65 @@ public class EditBookDialog extends JDialog {
         pack();
         setLocationRelativeTo(parent);
     }
-
     public boolean isSaveClicked() { return isSaveClicked; }
+    private void saveEditedBook(){
+        try{
+            // Lấy dữ liệu từ form
+            String title = bookTitleTextField.getText().trim();
+            String authors = authorTextField.getText().trim();
+            String publisher = publisherTextField.getText().trim();
+            int numPages = Integer.parseInt(pageCountTextField.getText().trim());
+            String language = (String) languageComboBox.getSelectedItem();
+            String genre = (String) genreComboBox.getSelectedItem();
+            String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
+            String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
+            String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
+            int quantity = Integer.parseInt(quantityTextField.getText().trim());
+            String dimensions = dimensionsTextField.getText().trim();
+            String weight = weightTextField.getText().trim();
+            double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
+            double price  = Double.parseDouble(importPriceTextField.getText().trim());
+            String description = descriptionTextArea.getText().trim();
 
-    // Các phương thức getter để lấy thông tin đã chỉnh sửa
-    public String getBookTitle() { return bookTitleTextField.getText(); }
-    public String getAuthor() { return authorTextField.getText(); }
-    public String getPublisher() { return publisherTextField.getText(); }
-    public String getPageCount() { return pageCountTextField.getText(); }
-    public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
-    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
-    public String getPublishDate() { return publishDateTextField.getText(); }
+             // Kiểm tra dữ liệu bắt buộc
+             if (title.isEmpty() || authors.isEmpty() || publicationDate.isEmpty() || warehouseEntryDate.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            Book book = new Book();
+            book.setProductId(bookToEdit.getProductId());
+            book.setTitle(title);
+            book.setCategory(bookToEdit.getCategory());
+            book.setPrice(price);
+            book.setValue(value);
+            book.setBarcode(bookToEdit.getBarcode());
+            book.setDescription(description);
+            book.setQuantity(quantity);
+            book.setWeight(weight);
+            book.setDimensions(dimensions);
+            book.setWarehouseEntryDate(warehouseEntryDate);
+            book.setAuthors(authors);
+            book.setCoverType(coverType);
+            book.setPublisher(publisher);
+            book.setPublicationDate(publicationDate);
+            book.setNumPages(numPages);
+            book.setLanguage(language);
+            book.setGenre(genre);
 
+            // Gọi DAO để lưu vào database
+            boolean success = BookDAO.getInstance().updateBook(book);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                isSaveClicked = true;
+                dispose(); // Đóng dialog
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số trang, số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

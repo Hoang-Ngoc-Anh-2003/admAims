@@ -48,6 +48,48 @@ public class LPDAO extends ProductDAO {
         return lp;
     }
     
+    // Cập nhật LP
+    public boolean updateLP(LP lp) {
+        String updateProductSql = "UPDATE Products SET title = ?, value = ?, price = ?, barcode = ?, " +
+                                  "description = ?, quantity = ?, weight = ?, dimensions = ?, warehouse_entry_date = ? " +
+                                  "WHERE product_id = ?";
+
+        String updateLPSql = "UPDATE LPs SET artists = ?, record_label = ?, tracklist = ?, " +
+                             "genre = ?, release_date = ? WHERE lp_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(updateProductSql);
+             PreparedStatement lpStmt = conn.prepareStatement(updateLPSql)) {
+
+            // Cập nhật Products
+            productStmt.setString(1, lp.getTitle());
+            productStmt.setDouble(2, lp.getValue());
+            productStmt.setDouble(3, lp.getPrice());
+            productStmt.setString(4, lp.getBarcode());
+            productStmt.setString(5, lp.getDescription());
+            productStmt.setInt(6, lp.getQuantity());
+            productStmt.setString(7, lp.getWeight());
+            productStmt.setString(8, lp.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(lp.getWarehouseEntryDate()));
+            productStmt.setInt(10, lp.getProductId());
+            productStmt.executeUpdate();
+
+            // Cập nhật LPs
+            lpStmt.setString(1, lp.getArtists());
+            lpStmt.setString(2, lp.getRecordLabel());
+            lpStmt.setString(3, lp.getTracklist());
+            lpStmt.setString(4, lp.getGenre());
+            lpStmt.setDate(5, java.sql.Date.valueOf(lp.getReleaseDate()));
+            lpStmt.setInt(6, lp.getProductId());
+
+            lpStmt.executeUpdate();
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<LP> getAllLPs() {
         List<LP> lps = new ArrayList<>();

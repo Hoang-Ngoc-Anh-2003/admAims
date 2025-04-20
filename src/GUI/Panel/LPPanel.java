@@ -12,10 +12,12 @@ import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
 import GUI.dialog.addDialog.AddLPDialog;
+import Interface.ReloadablePanel;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class LPPanel extends JPanel {
+public class LPPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
@@ -73,7 +75,7 @@ public class LPPanel extends JPanel {
         // Đặt renderer cho cột cuối cùng (Hành động)
         // Áp dụng EditButtonRenderer và EditButtonAction
         table.getColumnModel().getColumn(5).setCellRenderer(new EditButtonRenderer());
-        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table));
+        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table, this));
 
 
         
@@ -99,7 +101,7 @@ public class LPPanel extends JPanel {
         });
     }
 
-    private void loadLPs() {
+    public void loadLPs() {
         List<LP> lps = lpDAO.getAllLPs();
         tableModel.setRowCount(0);
         for (LP lp : lps) {
@@ -108,5 +110,10 @@ public class LPPanel extends JPanel {
                 lp.getPrice(), lp.getQuantity(), ""
             });
         }
+    }
+
+    @Override
+    public void reloadData() {
+        loadLPs(); // gọi method load hiện tại
     }
 }

@@ -150,7 +150,50 @@ public class CDDAO extends ProductDAO {
             e.printStackTrace();
         }
         return false;
-    }    
+    }
+    
+    // Cập nhật CD
+    public boolean updateCD(CD cd) {
+        String updateProductSql = "UPDATE Products SET title = ?, value = ?, price = ?, barcode = ?, " +
+                                  "description = ?, quantity = ?, weight = ?, dimensions = ?, warehouse_entry_date = ? " +
+                                  "WHERE product_id = ?";
+
+        String updateCDSql = "UPDATE CDs SET artists = ?, record_label = ?, tracklist = ?, " +
+                             "genre = ?, release_date = ? WHERE cd_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(updateProductSql);
+             PreparedStatement cdStmt = conn.prepareStatement(updateCDSql)) {
+
+            // Cập nhật Products
+            productStmt.setString(1, cd.getTitle());
+            productStmt.setDouble(2, cd.getValue());
+            productStmt.setDouble(3, cd.getPrice());
+            productStmt.setString(4, cd.getBarcode());
+            productStmt.setString(5, cd.getDescription());
+            productStmt.setInt(6, cd.getQuantity());
+            productStmt.setString(7, cd.getWeight());
+            productStmt.setString(8, cd.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(cd.getWarehouseEntryDate()));
+            productStmt.setInt(10, cd.getProductId());
+            productStmt.executeUpdate();
+
+            // Cập nhật CDs
+            cdStmt.setString(1, cd.getArtists());
+            cdStmt.setString(2, cd.getRecordLabel());
+            cdStmt.setString(3, cd.getTracklist());
+            cdStmt.setString(4, cd.getGenre());
+            cdStmt.setDate(5, java.sql.Date.valueOf(cd.getReleaseDate()));
+            cdStmt.setInt(6, cd.getProductId());
+            cdStmt.executeUpdate();
+            
+            return true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
     public CD getCDById(int productId) {

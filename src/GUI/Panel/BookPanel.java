@@ -14,8 +14,9 @@ import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
 import GUI.dialog.addDialog.AddBookDialog;
+import Interface.ReloadablePanel;
 
-public class BookPanel extends JPanel {
+public class BookPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
@@ -77,7 +78,7 @@ public class BookPanel extends JPanel {
         // Đặt renderer cho cột cuối cùng (Hành động)
         // Áp dụng EditButtonRenderer và EditButtonAction
         table.getColumnModel().getColumn(5).setCellRenderer(new EditButtonRenderer());
-        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table));
+        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table, this));
 
 
         
@@ -118,5 +119,10 @@ public class BookPanel extends JPanel {
             });
         }
         System.out.println("So luong book: " + books.size());
+    }
+
+    @Override
+    public void reloadData() {
+        loadBooks(); // gọi method load hiện tại
     }
 }

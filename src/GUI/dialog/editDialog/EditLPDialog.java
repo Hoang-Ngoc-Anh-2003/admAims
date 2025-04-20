@@ -267,7 +267,7 @@ public class EditLPDialog extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //saveEditedLP();
+                saveEditedLP();
             }
         });
 
@@ -285,19 +285,62 @@ public class EditLPDialog extends JDialog {
 
     public boolean isSaveClicked() { return isSaveClicked; }
 
-    // Các phương thức getter để lấy thông tin đã chỉnh sửa
-    public String getTitle() { return titleTextField.getText(); }
-    public String getArtist() { return artistTextField.getText(); }
-    public String getRecordLabel() { return recordLabelTextField.getText(); }
-    public String getGenre() { return genreTextField.getText(); }
-    public String getReleaseDate() { return releaseDateTextField.getText(); }
-    public String getTrackList() { return trackListTextArea.getText(); }
-    public String getImportDate() { return importDateTextField.getText(); }
-    public String getQuantity() { return quantityTextField.getText(); }
-    public String getDimensions() { return dimensionsTextField.getText(); }
-    public String getWeight() { return weightTextField.getText(); }
-    public String getSellingPrice() { return sellingPriceTextField.getText(); }
-    public String getImportPrice() { return importPriceTextField.getText(); }
-    public String getDescription() { return descriptionTextArea.getText(); }
+    private void saveEditedLP() {
+        try {
+            // Lấy dữ liệu từ form
+            String title = titleTextField.getText().trim();
+            String artists = artistTextField.getText().trim();
+            String recordLabel = recordLabelTextField.getText().trim();
+            String genre = genreTextField.getText().trim();
+            String releaseDate = releaseDateTextField.getText().trim(); // Định dạng:<ctrl3348>-MM-dd
+            String tracklist = trackListTextArea.getText().trim();
+            String warehouseEntryDate = importDateTextField.getText().trim(); // Định dạng:<ctrl3348>-MM-dd
+            int quantity = Integer.parseInt(quantityTextField.getText().trim());
+            String dimensions = dimensionsTextField.getText().trim();
+            String weight = weightTextField.getText().trim();
+            double value = Double.parseDouble(sellingPriceTextField.getText().trim());
+            double price = Double.parseDouble(importPriceTextField.getText().trim());
+            String description = descriptionTextArea.getText().trim();
+
+            // Kiểm tra dữ liệu bắt buộc
+            if (title.isEmpty() || artists.isEmpty() || recordLabel.isEmpty() || genre.isEmpty() || tracklist.isEmpty() || warehouseEntryDate.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            LP lp = new LP();
+            lp.setProductId(lpToEdit.getProductId());
+            lp.setTitle(title);
+            lp.setCategory(lpToEdit.getCategory());
+            lp.setPrice(price);
+            lp.setValue(value);
+            lp.setBarcode(lpToEdit.getBarcode());
+            lp.setDescription(description);
+            lp.setQuantity(quantity);
+            lp.setWeight(weight);
+            lp.setDimensions(dimensions);
+            lp.setWarehouseEntryDate(warehouseEntryDate);
+            lp.setArtists(artists);
+            lp.setRecordLabel(recordLabel);
+            lp.setTracklist(tracklist);
+            lp.setGenre(genre);
+            lp.setReleaseDate(releaseDate.isEmpty() ? null : releaseDate);
+
+            // Gọi DAO để lưu vào database
+            boolean success = LPDAO.getInstance().updateLP(lp);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Cập nhật thông tin LP thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                isSaveClicked = true;
+                dispose(); // Đóng dialog
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật thông tin LP vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
 }

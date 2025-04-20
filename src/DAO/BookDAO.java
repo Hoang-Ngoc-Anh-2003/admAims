@@ -94,6 +94,7 @@ public class BookDAO extends ProductDAO {
         return books;
     }
 
+    // barcode random
     private String generateUniqueBarcode(Connection conn) throws SQLException {
         String barcode;
         boolean isUnique = false;
@@ -194,18 +195,19 @@ public class BookDAO extends ProductDAO {
             bookStmt.setString(1, book.getAuthors());
             bookStmt.setString(2, book.getCoverType());
             bookStmt.setString(3, book.getPublisher());
-                bookStmt.setDate(4, java.sql.Date.valueOf(book.getPublicationDate()));
+            bookStmt.setDate(4, java.sql.Date.valueOf(book.getPublicationDate()));
             bookStmt.setInt(5, book.getNumPages());
             bookStmt.setString(6, book.getLanguage());
             bookStmt.setString(7, book.getGenre());
             bookStmt.setInt(8, book.getProductId());
-
             bookStmt.executeUpdate();
 
             return true;
+            
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+            
         }
     }
 

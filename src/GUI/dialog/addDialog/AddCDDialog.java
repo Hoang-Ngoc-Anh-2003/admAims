@@ -269,21 +269,6 @@ public class AddCDDialog extends JDialog {
     }
 
     public boolean isSaveClicked() { return isSaveClicked; }
-    // Các phương thức getter
-    public String getTitle() { return titleTextField.getText(); }
-    public String getArtist() { return artistTextField.getText(); }
-    public String getRecordLabel() { return recordLabelTextField.getText(); }
-    public String getGenre() { return genreTextField.getText(); }
-    public String getReleaseDate() { return releaseDateTextField.getText(); }
-    public String getTrackList() { return trackListTextArea.getText(); }
-    public String getImportDate() { return importDateTextField.getText(); }
-    public String getQuantity() { return quantityTextField.getText(); }
-    public String getDimensions() { return dimensionsTextField.getText(); }
-    public String getWeight() { return weightTextField.getText(); }
-    public String getSellingPrice() { return sellingPriceTextField.getText(); }
-    public String getImportPrice() { return importPriceTextField.getText(); }
-    public String getDescription() { return descriptionTextArea.getText(); }
-
     private void saveCD() {
         try {
             // Lấy dữ liệu từ form

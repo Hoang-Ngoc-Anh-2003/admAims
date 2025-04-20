@@ -98,6 +98,52 @@ public class DVDDAO extends ProductDAO {
         return dvds;
     }
 
+    // Cập nhật DVD
+    public boolean updateDVD(DVD dvd) {
+        String updateProductSql = "UPDATE Products SET title = ?, value = ?, price = ?, barcode = ?, " +
+                                  "description = ?, quantity = ?, weight = ?, dimensions = ?, warehouse_entry_date = ? " +
+                                  "WHERE product_id = ?";
+
+        String updateDVDSql = "UPDATE DVDs SET disc_type = ?, director = ?, runtime = ?, " +
+                              "studio = ?, language = ?, subtitles = ?, release_date = ?, genre = ? WHERE dvd_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(updateProductSql);
+             PreparedStatement dvdStmt = conn.prepareStatement(updateDVDSql)) {
+
+            // Cập nhật Products
+            productStmt.setString(1, dvd.getTitle());
+            productStmt.setDouble(2, dvd.getValue());
+            productStmt.setDouble(3, dvd.getPrice());
+            productStmt.setString(4, dvd.getBarcode());
+            productStmt.setString(5, dvd.getDescription());
+            productStmt.setInt(6, dvd.getQuantity());
+            productStmt.setString(7, dvd.getWeight());
+            productStmt.setString(8, dvd.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(dvd.getWarehouseEntryDate()));
+            productStmt.setInt(10, dvd.getProductId());
+            productStmt.executeUpdate();
+
+            // Cập nhật DVDs
+            dvdStmt.setString(1, dvd.getDiscType());
+            dvdStmt.setString(2, dvd.getDirector());
+            dvdStmt.setInt(3, dvd.getRuntime());
+            dvdStmt.setString(4, dvd.getStudio());
+            dvdStmt.setString(5, dvd.getLanguage());
+            dvdStmt.setString(6, dvd.getSubtitles());
+            dvdStmt.setDate(7, java.sql.Date.valueOf(dvd.getReleaseDate()));
+            dvdStmt.setString(8, dvd.getGenre());
+            dvdStmt.setInt(9, dvd.getProductId());
+            dvdStmt.executeUpdate();
+
+            return true;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private String generateUniqueBarcode(Connection conn) throws SQLException {
         String barcode;
         boolean isUnique = false;

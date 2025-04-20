@@ -9,18 +9,15 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import GUI.component.ButtonUI.*;
 import GUI.dialog.editDialog.*;
+import Interface.ReloadablePanel;
 import Model.*;
 import DAO.*;
-import GUI.Panel.*;
 // xử lý sự kiện button update/deletedelete
 public class EditButtonAction extends AbstractCellEditor implements TableCellEditor {
     private JPanel panel;
-    private JButton btnEdit, btnDelete;
-    private JTable table;
     private int row;
-
-    public EditButtonAction(JTable table) {
-        this.table = table;
+    
+    public EditButtonAction(JTable table, ReloadablePanel reloadablePanel) {
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 6, 0));
 
         RoundedButton btnEdit = new RoundedButton("Sửa", 10, new Color(0, 155, 229), new Color(0, 104, 190), new Color(0, 104, 190));
@@ -40,6 +37,9 @@ public class EditButtonAction extends AbstractCellEditor implements TableCellEdi
                         Book book = BookDAO.getInstance().getBookInfor(productId);
                         EditBookDialog editBookDialog = new EditBookDialog(parentFrame, "Book Edit", true, book);
                         editBookDialog.setVisible(true);
+                        if (editBookDialog.isSaveClicked()) { // Kiểm tra nếu nút "Lưu" đã được nhấn (nếu bạn đã thêm logic này vào AddBookDialog)
+                        reloadablePanel.reloadData();
+                        }
                         break;
                     case "CD" :
                         CD cd = CDDAO.getInstance().getCDInfor(productId);
@@ -60,15 +60,6 @@ public class EditButtonAction extends AbstractCellEditor implements TableCellEdi
                         JOptionPane.showMessageDialog(null, "Lỗi truy vấn dữ liệu.");
                         break;
                 }
-
-                // Sau khi dialog đóng, bạn có thể thực hiện hành động nào đó (ví dụ: tải lại dữ liệu nếu sách đã được sửa)
-                // if (editBookDialog.isSaveClicked()) {
-                //     // Thực hiện logic cập nhật dữ liệu ở đây
-                //     // Ví dụ: Gọi bookDAO.updateBook(editBookDialog.getUpdatedBook());
-                //     ((DefaultTableModel) table.getModel()).fireTableDataChanged(); // Cập nhật lại bảng
-                //     ((JPanel) table.getParent()).revalidate();
-                //     ((JPanel) table.getParent()).repaint();
-                // }
             }
         });
 

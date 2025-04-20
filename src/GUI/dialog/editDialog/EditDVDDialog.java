@@ -328,7 +328,7 @@ public class EditDVDDialog extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                //saveEditedDVD();
+                saveEditedDVD();
             }
         });
 
@@ -346,5 +346,67 @@ public class EditDVDDialog extends JDialog {
 
     public boolean isSaveClicked() { return isSaveClicked; }
 
-    // Các phương thức getter để lấy thông tin đã chỉnh sửa
+    private void saveEditedDVD() {
+        try {
+            // Lấy dữ liệu từ form
+            String title = titleTextField.getText().trim();
+            String director = directorTextField.getText().trim();
+            int runtime = Integer.parseInt(durationTextField.getText().trim());
+            String studio = productionCompanyTextField.getText().trim();
+            String language = (String) languageComboBox.getSelectedItem();
+            String subtitles = (String) subtitleComboBox.getSelectedItem();
+            String genre = (String) genreComboBox.getSelectedItem();
+            String releaseDate = releaseDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
+            String discType = blurayRadioButton.isSelected() ? "Blu-ray" : "HD-DVD";
+            String warehouseEntryDate = importDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
+            int quantity = Integer.parseInt(quantityTextField.getText().trim());
+            String dimensions = dimensionsTextField.getText().trim();
+            String weight = weightTextField.getText().trim();
+            double value = Double.parseDouble(sellingPriceTextField.getText().trim());
+            double price = Double.parseDouble(importPriceTextField.getText().trim());
+            String description = descriptionTextArea.getText().trim();
+
+            // Kiểm tra dữ liệu bắt buộc
+            if (title.isEmpty() || director.isEmpty() || studio.isEmpty() || warehouseEntryDate.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            DVD dvd = new DVD();
+            dvd.setProductId(dvdToEdit.getProductId());
+            dvd.setTitle(title);
+            dvd.setCategory(dvdToEdit.getCategory());
+            dvd.setPrice(price);
+            dvd.setValue(value);
+            dvd.setBarcode(dvdToEdit.getBarcode());
+            dvd.setDescription(description);
+            dvd.setQuantity(quantity);
+            dvd.setWeight(weight);
+            dvd.setDimensions(dimensions);
+            dvd.setWarehouseEntryDate(warehouseEntryDate);
+            dvd.setDiscType(discType);
+            dvd.setDirector(director);
+            dvd.setRuntime(runtime);
+            dvd.setStudio(studio);
+            dvd.setLanguage(language);
+            dvd.setSubtitles(subtitles);
+            dvd.setReleaseDate(releaseDate.isEmpty() ? null : releaseDate);
+            dvd.setGenre(genre);
+
+            // Gọi DAO để lưu vào database
+            boolean success = DVDDAO.getInstance().updateDVD(dvd);
+            if (success) {
+                JOptionPane.showMessageDialog(this, "Cập nhật thông tin DVD thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                isSaveClicked = true;
+                dispose(); // Đóng dialog
+            } else {
+                JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật thông tin DVD vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho thời lượng, số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 }

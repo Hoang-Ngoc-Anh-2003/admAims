@@ -12,12 +12,13 @@ import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
 import GUI.dialog.addDialog.AddCDDialog;
+import Interface.ReloadablePanel;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 // CDPanel - Quản lý danh sách CD
-public class CDPanel extends JPanel {
+public class CDPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
@@ -79,7 +80,7 @@ public class CDPanel extends JPanel {
         // Đặt renderer cho cột cuối cùng (Hành động)
         // Áp dụng EditButtonRenderer và EditButtonAction
         table.getColumnModel().getColumn(5).setCellRenderer(new EditButtonRenderer());
-        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table));
+        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table, this));
 
 
         
@@ -105,7 +106,7 @@ public class CDPanel extends JPanel {
         });
     }
 
-    private void loadCDs() {
+    public void loadCDs() {
         List<CD> cds = cdDAO.getAllCDs();
         tableModel.setRowCount(0);
         for (CD cd : cds) {
@@ -115,5 +116,10 @@ public class CDPanel extends JPanel {
             });
         }
         System.out.println("So luong CD: " + cds.size());
+    }
+
+    @Override
+    public void reloadData() {
+        loadCDs(); // gọi method load hiện tại
     }
 }
