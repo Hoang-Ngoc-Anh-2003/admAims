@@ -6,6 +6,50 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DVDDAO extends ProductDAO {
+    // lay thong tin DVD
+    public DVD getDVDInfor (int product_id){
+        DVD dvd = null;
+        String sql = "SELECT p.product_id, p.title, p.category, p.value, p.price," +
+                     "p.barcode, p.description, p.quantity, p.weight, p.dimensions, p.warehouse_entry_date," +
+                     "d.disc_type, d.director, d.runtime, d.studio, d.language, d.subtitles, d.release_date, d.genre " +
+                     "FROM products p " +
+                     "INNER JOIN dvds d ON p.product_id = d.dvd_id " +
+                     "WHERE p.category = 'DVD' AND p.product_id = ? ";
+
+        try(Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, product_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                dvd = new DVD();
+                dvd.setProductId(rs.getInt("product_id"));
+                dvd.setTitle(rs.getString("title"));
+                dvd.setCategory(rs.getString("category"));
+                dvd.setValue(rs.getDouble("value"));
+                dvd.setPrice(rs.getDouble("price"));
+                dvd.setBarcode(rs.getString("barcode"));
+                dvd.setDescription(rs.getString("description"));
+                dvd.setQuantity(rs.getInt("quantity"));
+                dvd.setWeight(rs.getString("weight")); // Chuyển sang getDouble
+                dvd.setDimensions(rs.getString("dimensions"));
+                dvd.setWarehouseEntryDate(rs.getString("warehouse_entry_date")); // Sử dụng getDate
+                dvd.setDiscType(rs.getString("disc_type"));
+                dvd.setDirector(rs.getString("director"));
+                dvd.setRuntime(rs.getInt("runtime"));
+                dvd.setStudio(rs.getString("studio"));
+                dvd.setLanguage(rs.getString("language"));
+                dvd.setSubtitles(rs.getString("subtitles"));
+                dvd.setReleaseDate(rs.getString("release_date")); // Sử dụng getDate
+                dvd.setGenre(rs.getString("genre"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return dvd;
+    }
     
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<DVD> getAllDVDs() {

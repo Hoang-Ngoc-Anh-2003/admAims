@@ -6,6 +6,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CDDAO extends ProductDAO {
+    // lay thong tin CD
+    public CD getCDInfor (int product_id){
+        CD cd = null;
+        String sql = "SELECT p.product_id, p.title, p.category, p.value, p.price," +
+                     "p.barcode, p.description, p.quantity, p.weight, p.dimensions, p.warehouse_entry_date," +
+                     "c.artists, c.record_label, c.tracklist, c.genre, c.release_date " +
+                     "FROM products p " +
+                     "INNER JOIN cds c ON p.product_id = c.cd_id " +
+                     "WHERE p.category = 'CD' AND p.product_id = ? ";
+
+        try(Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, product_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                cd = new CD();
+                cd.setProductId(rs.getInt("product_id"));
+                cd.setTitle(rs.getString("title"));
+                cd.setCategory(rs.getString("category"));
+                cd.setValue(rs.getDouble("value"));
+                cd.setPrice(rs.getDouble("price"));
+                cd.setBarcode(rs.getString("barcode"));
+                cd.setDescription(rs.getString("description"));
+                cd.setQuantity(rs.getInt("quantity"));
+                cd.setWeight(rs.getString("weight")); // Chuyển sang getDouble
+                cd.setDimensions(rs.getString("dimensions"));
+                cd.setWarehouseEntryDate(rs.getString("warehouse_entry_date")); // Sử dụng getDate
+                cd.setArtists(rs.getString("artists"));
+                cd.setRecordLabel(rs.getString("record_label"));
+                cd.setTracklist(rs.getString("tracklist"));
+                cd.setGenre(rs.getString("genre"));
+                cd.setReleaseDate(rs.getString("release_date")); // Sử dụng getDate
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return cd;
+    }
     
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<CD> getAllCDs() {

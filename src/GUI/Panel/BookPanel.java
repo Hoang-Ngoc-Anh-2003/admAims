@@ -13,7 +13,7 @@ import Model.Book;
 import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
-import GUI.dialog.AddBookDialog;
+import GUI.dialog.addDialog.AddBookDialog;
 
 public class BookPanel extends JPanel {
     private JTable table;
@@ -108,7 +108,7 @@ public class BookPanel extends JPanel {
 
     }
 
-    private void loadBooks() {
+    public void loadBooks() {
         List<Book> books = bookDAO.getAllBooks();
         tableModel.setRowCount(0);
         for (Book book : books) {

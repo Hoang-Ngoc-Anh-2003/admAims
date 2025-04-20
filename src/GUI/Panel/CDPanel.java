@@ -11,7 +11,8 @@ import Model.CD;
 import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
-import GUI.dialog.*;
+import GUI.dialog.addDialog.AddCDDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

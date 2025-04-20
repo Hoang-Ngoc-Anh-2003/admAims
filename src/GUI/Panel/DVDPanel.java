@@ -11,7 +11,8 @@ import Model.*;
 import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
-import GUI.dialog.AddDVDDialog;
+import GUI.dialog.addDialog.AddDVDDialog;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

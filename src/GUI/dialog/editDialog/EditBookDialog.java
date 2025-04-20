@@ -1,16 +1,17 @@
-package GUI.dialog;
+package GUI.dialog.editDialog;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
 import GUI.component.ButtonUI.*;
 import Model.*;
 import DAO.*;
 import javax.swing.border.TitledBorder;
 
-public class AddBookDialog extends JDialog {
+public class EditBookDialog extends JDialog {
 
     private JTextField bookTitleTextField;
     private JTextField authorTextField;
@@ -31,11 +32,13 @@ public class AddBookDialog extends JDialog {
     private JButton cancelButton;
     private JButton saveButton;
     private boolean isSaveClicked = false;
+    private Book bookToEdit; // Thêm biến để lưu trữ thông tin sách cần sửa
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
 
-    public AddBookDialog(JFrame parent, String title, boolean modal) {
+    public EditBookDialog(JFrame parent, String title, boolean modal, Book book) {
         super(parent, title, modal);
+        this.bookToEdit = book; // Lưu trữ đối tượng Book được truyền vào
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setLayout(new BorderLayout());
 
@@ -66,6 +69,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.gridy = 0;
         gbcGeneral.insets = fieldMargin;
         generalInfoPanel.add(bookTitleTextField = new JTextField(20), gbcGeneral);
+        bookTitleTextField.setText(bookToEdit.getTitle()); // Điền thông tin
 
         gbcGeneral.gridx = 2;
         gbcGeneral.gridy = 0;
@@ -77,6 +81,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.insets = fieldMargin;
         pageCountTextField = new JTextField(10);
         generalInfoPanel.add(pageCountTextField, gbcGeneral);
+        pageCountTextField.setText(String.valueOf(bookToEdit.getNumPages())); // Điền thông tin
 
         // Hàng 2: Tác giả - Ngôn ngữ
         gbcGeneral.gridx = 0;
@@ -88,6 +93,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.gridy = 1;
         gbcGeneral.insets = fieldMargin;
         generalInfoPanel.add(authorTextField = new JTextField(20), gbcGeneral);
+        authorTextField.setText(bookToEdit.getAuthors()); // Điền thông tin
 
         gbcGeneral.gridx = 2;
         gbcGeneral.gridy = 1;
@@ -99,6 +105,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.insets = fieldMargin;
         languageComboBox = new JComboBox<>(new String[]{"Tiếng Việt", "Tiếng Anh", "Khác"});
         generalInfoPanel.add(languageComboBox, gbcGeneral);
+        languageComboBox.setSelectedItem(bookToEdit.getLanguage()); // Điền thông tin
 
         // Hàng 3: Nhà xuất bản - Thể loại
         gbcGeneral.gridx = 0;
@@ -110,6 +117,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.gridy = 2;
         gbcGeneral.insets = fieldMargin;
         generalInfoPanel.add(publisherTextField = new JTextField(20), gbcGeneral);
+        publisherTextField.setText(bookToEdit.getPublisher()); // Điền thông tin
 
         gbcGeneral.gridx = 2;
         gbcGeneral.gridy = 2;
@@ -121,6 +129,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.insets = fieldMargin;
         genreComboBox = new JComboBox<>(new String[]{"Tiểu thuyết", "Truyện ngắn", "Trinh thám", "Kinh dị", "Khác"});
         generalInfoPanel.add(genreComboBox, gbcGeneral);
+        genreComboBox.setSelectedItem(bookToEdit.getGenre()); // Điền thông tin
 
         // Hàng 4: Ngày xuất bản
         gbcGeneral.gridx = 0;
@@ -133,6 +142,7 @@ public class AddBookDialog extends JDialog {
         gbcGeneral.insets = fieldMargin;
         publishDateTextField = new JFormattedTextField();
         publishDateTextField.setColumns(20);
+        publishDateTextField.setText(bookToEdit.getPublicationDate()); // Điền thông tin
         generalInfoPanel.add(publishDateTextField, gbcGeneral);
         gbcGeneral.gridwidth = 3; // Để trống cột bên phải
         gbcGeneral.gridx = 2;
@@ -171,6 +181,12 @@ public class AddBookDialog extends JDialog {
         coverTypeGroup.add(paperbackRadioButton);
         coverTypeGroup.add(hardcoverRadioButton);
 
+        if (bookToEdit.getCoverType().equalsIgnoreCase("paperback")) {
+            paperbackRadioButton.setSelected(true);
+        } else if (bookToEdit.getCoverType().equalsIgnoreCase("hardcover")) {
+            hardcoverRadioButton.setSelected(true);
+        }
+
         coverTypePanel.add(paperbackRadioButton);
         coverTypePanel.add(Box.createHorizontalStrut(30)); // Thêm khoảng trống 20 pixel
         coverTypePanel.add(hardcoverRadioButton);
@@ -203,6 +219,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.insets = fieldMargin;
         importDateTextField = new JFormattedTextField();
         importDateTextField.setColumns(20);
+        importDateTextField.setText(bookToEdit.getWarehouseEntryDate()); // Điền thông tin
         importInfoPanel.add(importDateTextField, gbcImport);
 
         gbcImport.gridx = 2;
@@ -214,6 +231,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.gridy = 0;
         gbcImport.insets = fieldMargin;
         quantityTextField = new JTextField(10);
+        quantityTextField.setText(String.valueOf(bookToEdit.getQuantity())); // Điền thông tin
         importInfoPanel.add(quantityTextField, gbcImport);
 
         // Hàng 2: Kích thước - Trọng lượng
@@ -226,6 +244,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.gridy = 1;
         gbcImport.insets = fieldMargin;
         dimensionsTextField = new JTextField(20);
+        dimensionsTextField.setText(bookToEdit.getDimensions()); // Điền thông tin
         importInfoPanel.add(dimensionsTextField, gbcImport);
 
         gbcImport.gridx = 2;
@@ -237,6 +256,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.gridy = 1;
         gbcImport.insets = fieldMargin;
         weightTextField = new JTextField(10);
+        weightTextField.setText(bookToEdit.getWeight()); // Điền thông tin
         importInfoPanel.add(weightTextField, gbcImport);
 
         // Hàng 3: Giá bán - Giá nhập
@@ -249,6 +269,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.gridy = 2;
         gbcImport.insets = fieldMargin;
         sellingPriceTextField = new JTextField(10);
+        sellingPriceTextField.setText(String.valueOf(bookToEdit.getValue())); // Điền thông tin
         importInfoPanel.add(sellingPriceTextField, gbcImport);
 
         gbcImport.gridx = 2;
@@ -260,6 +281,7 @@ public class AddBookDialog extends JDialog {
         gbcImport.gridy = 2;
         gbcImport.insets = fieldMargin;
         importPriceTextField = new JTextField(10);
+        importPriceTextField.setText(String.valueOf(bookToEdit.getPrice())); // Điền thông tin
         importInfoPanel.add(importPriceTextField, gbcImport);
 
         gbc.gridx = 0;
@@ -273,6 +295,7 @@ public class AddBookDialog extends JDialog {
         JPanel descriptionPanel = new JPanel(new BorderLayout());
         descriptionPanel.setBorder(new TitledBorder("Mô tả"));
         descriptionTextArea = new JTextArea(5, 40);
+        descriptionTextArea.setText(bookToEdit.getDescription()); // Điền thông tin
         descriptionPanel.add(new JScrollPane(descriptionTextArea), BorderLayout.CENTER);
 
         gbc.gridx = 0;
@@ -290,13 +313,13 @@ public class AddBookDialog extends JDialog {
         saveButton = new RoundedButton("Lưu", 10, new Color(0, 155, 229), new Color(0, 104, 190), new Color(0, 104, 190));
         buttonPanel.add(cancelButton);
         buttonPanel.add(saveButton);
-        add(buttonPanel, BorderLayout.SOUTH); 
+        add(buttonPanel, BorderLayout.SOUTH);
 
         // Action Listeners cho nút Lưu và Hủy
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveBook();
+                // saveEditedBook();
             }
         });
 
@@ -313,7 +336,8 @@ public class AddBookDialog extends JDialog {
     }
 
     public boolean isSaveClicked() { return isSaveClicked; }
-    // Các phương thức getter
+
+    // Các phương thức getter để lấy thông tin đã chỉnh sửa
     public String getBookTitle() { return bookTitleTextField.getText(); }
     public String getAuthor() { return authorTextField.getText(); }
     public String getPublisher() { return publisherTextField.getText(); }
@@ -321,62 +345,5 @@ public class AddBookDialog extends JDialog {
     public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
     public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
     public String getPublishDate() { return publishDateTextField.getText(); }
-    public boolean isPaperback() { return paperbackRadioButton.isSelected(); }
-    public boolean isHardcover() { return hardcoverRadioButton.isSelected(); }
-    public String getImportDate() { return importDateTextField.getText(); }
-    public String getQuantity() { return quantityTextField.getText(); }
-    public String getDimensions() { return dimensionsTextField.getText(); }
-    public String getWeight() { return weightTextField.getText(); }
-    public String getSellingPrice() { return sellingPriceTextField.getText(); }
-    public String getImportPrice() { return importPriceTextField.getText(); }
-    public String getDescription() { return descriptionTextArea.getText(); }
-
-    private void saveBook() {
-        try {
-            // Lấy dữ liệu từ form
-            String title = bookTitleTextField.getText().trim();
-            String authors = authorTextField.getText().trim();
-            String publisher = publisherTextField.getText().trim();
-            int numPages = Integer.parseInt(pageCountTextField.getText().trim());
-            String language = (String) languageComboBox.getSelectedItem();
-            String genre = (String) genreComboBox.getSelectedItem();
-            String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
-            String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
-            String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-            int quantity = Integer.parseInt(quantityTextField.getText().trim());
-            String dimensions = dimensionsTextField.getText().trim();
-            String weight = weightTextField.getText().trim();
-            double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
-            double price  = Double.parseDouble(importPriceTextField.getText().trim());
-            String description = descriptionTextArea.getText().trim();
-
-            // Kiểm tra dữ liệu bắt buộc
-            if (title.isEmpty() || authors.isEmpty() || publicationDate.isEmpty() || warehouseEntryDate.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Tạo đối tượng Book
-            Book book = new Book(0, title, "book", value, price, "0", description,
-            quantity, weight, dimensions, warehouseEntryDate,authors,
-            coverType, publisher, publicationDate, numPages,
-            language, genre);
-
-            // Gọi DAO để lưu vào database
-            boolean success = BookDAO.getInstance().addBook(book);
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                isSaveClicked = true;
-                dispose(); // Đóng dialog
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số trang, số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 
 }

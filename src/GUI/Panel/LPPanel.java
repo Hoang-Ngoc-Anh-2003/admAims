@@ -11,8 +11,7 @@ import Model.*;
 import GUI.component.ButtonAction.EditButtonAction;
 import GUI.component.ButtonUI.*;
 import GUI.component.CustomTable.CustomTableCellRenderer;
-import GUI.dialog.*;
-
+import GUI.dialog.addDialog.AddLPDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

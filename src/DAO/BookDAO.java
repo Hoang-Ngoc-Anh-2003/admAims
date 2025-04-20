@@ -6,6 +6,49 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookDAO extends ProductDAO {
+    // lay thong tin sach
+    public Book getBookInfor (int product_id){
+        Book book = null;
+        String sql = "SELECT p.product_id, p.title, p.category, p.value, p.price," + 
+        "p.barcode, p.description, p.quantity, p.weight, p.dimensions, p.warehouse_entry_date," + 
+        "b.authors, b.cover_type, b.publisher, b.publication_date, b.num_pages, b.language, b.genre " + 
+        "FROM products p " + 
+        "INNER JOIN books b ON p.product_id = b.book_id " + 
+        "WHERE p.category = 'book' AND p.product_id = ? ";
+
+        try(Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, product_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                book = new Book();
+                book.setProductId(rs.getInt("product_id"));
+                book.setTitle(rs.getString("title"));
+                book.setCategory(rs.getString("category"));
+                book.setValue(rs.getDouble("value"));
+                book.setPrice(rs.getDouble("price"));
+                book.setBarcode(rs.getString("barcode"));
+                book.setDescription(rs.getString("description"));
+                book.setQuantity(rs.getInt("quantity"));
+                book.setWeight(rs.getString("weight"));
+                book.setDimensions(rs.getString("dimensions"));
+                book.setWarehouseEntryDate(rs.getString("warehouse_entry_date"));
+                book.setAuthors(rs.getString("authors"));
+                book.setCoverType(rs.getString("cover_type"));
+                book.setPublisher(rs.getString("publisher"));
+                book.setPublicationDate(rs.getString("publication_date"));
+                book.setNumPages(rs.getInt("num_pages"));
+                book.setLanguage(rs.getString("language"));
+                book.setGenre(rs.getString("genre"));
+            }     
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return book;
+    }
 
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<Book> getAllBooks() {
@@ -122,46 +165,49 @@ public class BookDAO extends ProductDAO {
     
 
     // Cập nhật sách
-    // public boolean updateBook(Book book) {
-    //     String productSQL = "UPDATE Products SET title = ?, value = ?, price = ?, barcode = ?, description = ?, quantity = ?, weight = ?, dimensions = ?, warehouse_entry_date = ? " +
-    //                         "WHERE product_id = ?";
-    //     String bookSQL = "UPDATE Books SET authors = ?, cover_type = ?, publisher = ?, publication_date = ?, num_pages = ?, language = ?, genre = ? " +
-    //                      "WHERE book_id = ?";
+    public boolean updateBook(Book book) {
+        String updateProductSql = "UPDATE Products SET title = ?, value = ?, price = ?, barcode = ?, " +
+        "description = ?, quantity = ?, weight = ?, dimensions = ?, warehouse_entry_date = ? " +
+        "WHERE product_id = ?";
+
+        String updateBookSql = "UPDATE Books SET authors = ?, cover_type = ?, publisher = ?, " +
+        "publication_date = ?, num_pages = ?, language = ?, genre = ? WHERE book_id = ?";
         
-    //     try (Connection conn = DatabaseConnection.getConnection();
-    //          PreparedStatement productStmt = conn.prepareStatement(productSQL);
-    //          PreparedStatement bookStmt = conn.prepareStatement(bookSQL)) {
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement productStmt = conn.prepareStatement(updateProductSql);
+             PreparedStatement bookStmt = conn.prepareStatement(updateBookSql)) {
 
-    //         // Cập nhật Products
-    //         productStmt.setString(1, book.getTitle());
-    //         productStmt.setBigDecimal(2, book.getValue());
-    //         productStmt.setBigDecimal(3, book.getPrice());
-    //         productStmt.setString(4, book.getBarcode());
-    //         productStmt.setString(5, book.getDescription());
-    //         productStmt.setInt(6, book.getQuantity());
-    //         productStmt.setString(7, book.getWeight());
-    //         productStmt.setString(8, book.getDimensions());
-    //         productStmt.setDate(9, new java.sql.Date(book.getWarehouseEntryDate().getTime()));
-    //         productStmt.setInt(10, book.getProductId());
+            // Cập nhật Products
+            productStmt.setString(1, book.getTitle());
+            productStmt.setDouble(2, book.getValue());
+            productStmt.setDouble(3, book.getPrice());
+            productStmt.setString(4, book.getBarcode());
+            productStmt.setString(5, book.getDescription());
+            productStmt.setInt(6, book.getQuantity());
+            productStmt.setString(7, book.getWeight());
+            productStmt.setString(8, book.getDimensions());
+            productStmt.setDate(9, java.sql.Date.valueOf(book.getWarehouseEntryDate()));
+            productStmt.setInt(10, book.getProductId());
+            productStmt.executeUpdate();
 
-    //         // Cập nhật Books
-    //         bookStmt.setString(1, book.getAuthors());
-    //         bookStmt.setString(2, book.getCoverType());
-    //         bookStmt.setString(3, book.getPublisher());
-    //         bookStmt.setDate(4, new java.sql.Date(book.getPublicationDate().getTime()));
-    //         bookStmt.setInt(5, book.getNumPages());
-    //         bookStmt.setString(6, book.getLanguage());
-    //         bookStmt.setString(7, book.getGenre());
-    //         bookStmt.setInt(8, book.getProductId());
+            // Cập nhật Books
+            bookStmt.setString(1, book.getAuthors());
+            bookStmt.setString(2, book.getCoverType());
+            bookStmt.setString(3, book.getPublisher());
+                bookStmt.setDate(4, java.sql.Date.valueOf(book.getPublicationDate()));
+            bookStmt.setInt(5, book.getNumPages());
+            bookStmt.setString(6, book.getLanguage());
+            bookStmt.setString(7, book.getGenre());
+            bookStmt.setInt(8, book.getProductId());
 
-    //         int productUpdated = productStmt.executeUpdate();
-    //         int bookUpdated = bookStmt.executeUpdate();
-    //         return productUpdated > 0 && bookUpdated > 0;
-    //     } catch (SQLException e) {
-    //         e.printStackTrace();
-    //     }
-    //     return false;
-    // }
+            bookStmt.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public Book getBookById(int productId) {
         String sql = "SELECT * FROM Products JOIN Books ON Products.product_id = Books.product_id WHERE Products.product_id = ?";

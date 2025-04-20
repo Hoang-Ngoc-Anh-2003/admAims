@@ -7,6 +7,43 @@ import java.util.List;
 
 public class ProductDAO {
 
+    // lay thong tin loai san pham (book, cd, dvd, lp)
+    public String getProductCategory(int productId) {
+        String category = null;
+        String sql = "SELECT product_id, title, category, value, price, barcode, description, quantity, weight, dimensions, warehouse_entry_date " +
+                     "FROM Products " +
+                     "WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, productId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                category = rs.getString("category");
+                // product = new Product();
+                // product.setProductId(rs.getInt("product_id"));
+                // product.setTitle(rs.getString("title"));
+                // product.setCategory(rs.getString("category"));
+                // product.setValue(rs.getDouble("value"));
+                // product.setPrice(rs.getDouble("price"));
+                // product.setBarcode(rs.getString("barcode"));
+                // product.setDescription(rs.getString("description"));
+                // product.setQuantity(rs.getInt("quantity"));
+                // product.setWeight(rs.getString("weight"));
+                // product.setDimensions(rs.getString("dimensions"));
+                // product.setWarehouseEntryDate(rs.getString("warehouse_entry_date"));
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        return category;
+    }
+
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<Product> getAllProducts() {
         List<Product> products = new ArrayList<>();
@@ -59,5 +96,14 @@ public class ProductDAO {
 
     protected Product createProductFromResultSet(ResultSet rs) throws SQLException {
         return null; // Override ở subclass
+    }
+
+    private static ProductDAO instance;
+
+    public static ProductDAO getInstance() {
+        if (instance == null) {
+            instance = new ProductDAO();
+        }
+        return instance;
     }
 }

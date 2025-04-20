@@ -9,6 +9,9 @@ public class DVD extends Product {
     private String subtitles;  // Phụ đề
     private String releaseDate;  // Ngày phát hành
     private String genre;      // Thể loại
+    
+    public DVD(){
+    }
 
     public DVD(int productId, String title, String category, double value, double price, String barcode,
     String description, int quantity, String weight, String dimensions, String warehouseEntryDate, String discType, String director,

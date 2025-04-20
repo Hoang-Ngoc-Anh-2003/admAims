@@ -6,6 +6,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LPDAO extends ProductDAO {
+    // lay thong tin LP
+    public LP getLPInfor (int product_id){
+        LP lp = null;
+        String sql = "SELECT p.product_id, p.title, p.category, p.value, p.price," +
+                     "p.barcode, p.description, p.quantity, p.weight, p.dimensions, p.warehouse_entry_date," +
+                     "l.artists, l.record_label, l.tracklist, l.genre, l.release_date " +
+                     "FROM products p " +
+                     "INNER JOIN lps l ON p.product_id = l.lp_id " +
+                     "WHERE p.category = 'LP' AND p.product_id = ? ";
+
+        try(Connection conn = DatabaseConnection.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(sql)){
+
+            stmt.setInt(1, product_id);
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                lp = new LP();
+                lp.setProductId(rs.getInt("product_id"));
+                lp.setTitle(rs.getString("title"));
+                lp.setCategory(rs.getString("category"));
+                lp.setValue(rs.getDouble("value"));
+                lp.setPrice(rs.getDouble("price"));
+                lp.setBarcode(rs.getString("barcode"));
+                lp.setDescription(rs.getString("description"));
+                lp.setQuantity(rs.getInt("quantity"));
+                lp.setWeight(rs.getString("weight")); // Chuyển sang getDouble
+                lp.setDimensions(rs.getString("dimensions"));
+                lp.setWarehouseEntryDate(rs.getString("warehouse_entry_date")); // Sử dụng getDate
+                lp.setArtists(rs.getString("artists"));
+                lp.setRecordLabel(rs.getString("record_label"));
+                lp.setTracklist(rs.getString("tracklist"));
+                lp.setGenre(rs.getString("genre"));
+                lp.setReleaseDate(rs.getString("release_date")); // Sử dụng getDate
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+        return lp;
+    }
     
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<LP> getAllLPs() {

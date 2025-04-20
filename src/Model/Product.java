@@ -13,6 +13,9 @@ public abstract class Product {
     protected String dimensions;
     protected String warehouseEntryDate;
 
+    public Product(){
+    }
+
     public Product(int productId, String title, String category, double value, double price, String barcode,
             String description, int quantity, String weight, String dimensions, String warehouseEntryDate) {
         this.productId = productId;

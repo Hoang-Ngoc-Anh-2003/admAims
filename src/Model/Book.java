@@ -9,6 +9,9 @@ public class Book extends Product {
     private String language;    // Ngôn ngữ
     private String genre;       // Thể loại
 
+    public Book(){  
+    }
+    
     public Book(int productId, String title, String category, double value, double price, String barcode,
             String description, int quantity, String weight, String dimensions, String warehouseEntryDate, String authors,
             String coverType, String publisher, String publicationDate, int numPages, String language, String genre) {

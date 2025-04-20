@@ -7,6 +7,10 @@ public class LP extends Product {
     private String genre;        // Thể loại
     private String releaseDate;    // Ngày phát hành
 
+    public LP(){
+        
+    }
+
     public LP(int productId, String title, String category, double value, double price, String barcode,
     String description, int quantity, String weight, String dimensions, String warehouseEntryDate, String artists, String recordLabel,
               String tracklist, String genre, String releaseDate) {
