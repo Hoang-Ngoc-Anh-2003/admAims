@@ -36,15 +36,19 @@ public class MainFrame extends JFrame {
         sidebar.setPreferredSize(new Dimension(250, getHeight()));
         sidebar.setBackground(new Color(22, 33, 53));
         
-        JButton btnHome = createSidebarButton("\uD83C\uDFE0 Trang chủ", true);
-        JLabel lblProductManagement = new JLabel("Quản lý sản phẩm");
-        lblProductManagement.setForeground(Color.WHITE);
-        lblProductManagement.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 10));
+        Font sidebarFont = new Font("Arial", Font.BOLD, 14);
+
+        JButton btnHome = createSidebarButton("     \uD83C\uDFE0    Trang chủ", false);
         
-        JButton btnBooks = createSidebarButton("Danh sách Book", false);
-        JButton btnDVDs = createSidebarButton("Danh sách DVD", false);
-        JButton btnCDs = createSidebarButton("Danh sách CD", false);
-        JButton btnLPs = createSidebarButton("Danh sách LP", false);
+        JLabel lblProductManagement = new JLabel("Quản lý sản phẩm");
+        lblProductManagement.setFont(sidebarFont);
+        lblProductManagement.setForeground(Color.WHITE);
+        lblProductManagement.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 10));
+        
+        JButton btnBooks = createSidebarButton("     📚     Danh sách Book", false);
+        JButton btnDVDs = createSidebarButton("     🎬     Danh sách DVD", false);
+        JButton btnCDs = createSidebarButton("     🎶     Danh sách CD", false);
+        JButton btnLPs = createSidebarButton("     📻     Danh sách LP", false);
         
         sidebar.add(btnHome);
         sidebar.add(lblProductManagement);
@@ -145,18 +149,6 @@ public class MainFrame extends JFrame {
         }
         return button;
     }
-
-    // private void updateCategoryCounts() {
-    //     int bookCount = BookDAO.getProductCount("Books");
-    //     int dvdCount = DVDDAO.getProductCount("DVDs");
-    //     int cdCount = CDDAO.getProductCount("CDs");
-    //     int lpCount = LPDAO.getProductCount("LPs");
-
-    //     btnBook.setText("<html><center>Book<br>" + bookCount + "</center></html>");
-    //     btnDVD.setText("<html><center>DVD<br>" + dvdCount + "</center></html>");
-    //     btnCD.setText("<html><center>CD<br>" + cdCount + "</center></html>");
-    //     btnLP.setText("<html><center>LP<br>" + lpCount + "</center></html>");
-    // }
     
     private JButton createCategoryButton(String category, int count) {
         JButton button = new JButton("<html><center>" + category + "<br>" + count + "</center></html>");
