@@ -1,8 +1,8 @@
 package Test;
 import java.util.List;
 
-import DAO.BookDAO;
-import Model.Book;
+import model.dao.BookDAO;
+import model.entity.Book;
 
 public class BookDAOTest {
     public static void main(String[] args) {

@@ -1,8 +1,9 @@
 package Test;
 
-import DAO.DatabaseConnection;
 import java.sql.Connection;
 import java.sql.SQLException;
+
+import Utils.DatabaseConnection;
 
 public class TestConnection {
     public static void main(String[] args) {
