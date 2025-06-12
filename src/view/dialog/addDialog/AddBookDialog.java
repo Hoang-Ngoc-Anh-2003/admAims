@@ -7,8 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import view.component.ButtonUI.*;
-import model.dao.*;
-import model.entity.Book;
+import controller.DialogControler.AddControler.AddProductController;
 
 import javax.swing.border.TitledBorder;
 
@@ -36,6 +35,7 @@ public class AddBookDialog extends JDialog {
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
 
+    private AddProductController addBookController = new AddProductController();
 
     public AddBookDialog(JFrame parent, String title, boolean modal) {
         super(parent, title, modal);
@@ -299,7 +299,32 @@ public class AddBookDialog extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveBook();
+                // Lấy dữ liệu từ form
+                String title = bookTitleTextField.getText().trim();
+                String authors = authorTextField.getText().trim();
+                String publisher = publisherTextField.getText().trim();
+                int numPages = Integer.parseInt(pageCountTextField.getText().trim());
+                String language = (String) languageComboBox.getSelectedItem();
+                String genre = (String) genreComboBox.getSelectedItem();
+                String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
+                String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
+                String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
+                int quantity = Integer.parseInt(quantityTextField.getText().trim());
+                String dimensions = dimensionsTextField.getText().trim();
+                String weight = weightTextField.getText().trim();
+                double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
+                double price  = Double.parseDouble(importPriceTextField.getText().trim());
+                String description = descriptionTextArea.getText().trim();
+                
+                // Gọi controller để xử lý lưu
+                isSaveClicked = addBookController.addBook(
+                    title, authors, publisher, numPages, language, genre,
+                    publicationDate, coverType, warehouseEntryDate, quantity,
+                    dimensions, weight, value, price, description
+                );
+                if (isSaveClicked) {
+                    dispose(); // Đóng dialog nếu lưu thành công
+                }
             }
         });
 
@@ -316,52 +341,4 @@ public class AddBookDialog extends JDialog {
     }
 
     public boolean isSaveClicked() { return isSaveClicked; }
-    private void saveBook() {
-        try {
-            // Lấy dữ liệu từ form
-            String title = bookTitleTextField.getText().trim();
-            String authors = authorTextField.getText().trim();
-            String publisher = publisherTextField.getText().trim();
-            int numPages = Integer.parseInt(pageCountTextField.getText().trim());
-            String language = (String) languageComboBox.getSelectedItem();
-            String genre = (String) genreComboBox.getSelectedItem();
-            String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
-            String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
-            String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-            int quantity = Integer.parseInt(quantityTextField.getText().trim());
-            String dimensions = dimensionsTextField.getText().trim();
-            String weight = weightTextField.getText().trim();
-            double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
-            double price  = Double.parseDouble(importPriceTextField.getText().trim());
-            String description = descriptionTextArea.getText().trim();
-
-            // Kiểm tra dữ liệu bắt buộc
-            if (title.isEmpty() || authors.isEmpty() || publicationDate.isEmpty() || warehouseEntryDate.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Tạo đối tượng Book
-            Book book = new Book(0, title, "book", value, price, "0", description,
-            quantity, weight, dimensions, warehouseEntryDate,authors,
-            coverType, publisher, publicationDate, numPages,
-            language, genre);
-
-            // Gọi DAO để lưu vào database
-            boolean success = BookDAO.getInstance().addBook(book);
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                isSaveClicked = true;
-                dispose(); // Đóng dialog
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số trang, số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
 }

@@ -11,7 +11,7 @@ import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.*;
+import controller.PanelControler.CDController;
 import model.entity.CD;
 
 // CDPanel - Quản lý danh sách CD

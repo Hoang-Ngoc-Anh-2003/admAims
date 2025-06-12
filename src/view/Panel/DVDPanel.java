@@ -11,7 +11,7 @@ import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.*;
+import controller.PanelControler.DVDController;
 import model.entity.*;
 
 public class DVDPanel extends JPanel implements ReloadablePanel{

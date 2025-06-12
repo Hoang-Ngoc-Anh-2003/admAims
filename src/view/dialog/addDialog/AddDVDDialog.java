@@ -10,9 +10,7 @@ import view.component.ButtonUI.*;
 
 import javax.swing.border.TitledBorder;
 
-import model.dao.DVDDAO;
-import model.entity.DVD;
-
+import controller.DialogControler.AddControler.AddProductController;
 public class AddDVDDialog extends JDialog {
 
     private JTextField titleTextField;
@@ -37,6 +35,7 @@ public class AddDVDDialog extends JDialog {
     private boolean isSaveClicked = false;
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
+    private AddProductController addDVDController = new AddProductController();
 
     public AddDVDDialog(JFrame parent, String title, boolean modal) {
         super(parent, title, modal);
@@ -306,7 +305,34 @@ public class AddDVDDialog extends JDialog {
         saveButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                saveDVD();
+                // Lấy dữ liệu từ form
+                String title = titleTextField.getText().trim();
+                String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
+                String dimensions = dimensionsTextField.getText().trim();
+                String weight = weightTextField.getText().trim();
+                String description = descriptionTextArea.getText().trim();
+                double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
+                double price  = Double.parseDouble(importPriceTextField.getText().trim());
+                int quantity = Integer.parseInt(quantityTextField.getText().trim());
+
+                String discType = blurayRadioButton.isSelected() ? "Blu-ray" : "HD-DVD";
+                String director = directorTextField.getText().trim();
+                int runtime = Integer.parseInt(durationTextField.getText().trim());
+                String studio = productionCompanyTextField.getText().trim();
+                String language = (String) languageComboBox.getSelectedItem();
+                String subtitles = (String) subtitleComboBox.getSelectedItem();
+                String releaseDate = releaseDateTextField.getText().trim();
+                String genre = (String) genreComboBox.getSelectedItem();
+
+                // Gọi controller để xử lý lưu
+                isSaveClicked = addDVDController.addDVD(
+                    title, warehouseEntryDate, dimensions, weight, description,
+                    value, price, quantity, discType, director,
+                    runtime, studio, language, subtitles, releaseDate, genre
+                );
+                if (isSaveClicked) {
+                    dispose(); // Đóng dialog nếu lưu thành công
+                }
             }
         });
 
@@ -323,52 +349,4 @@ public class AddDVDDialog extends JDialog {
     }
 
     public boolean isSaveClicked() { return isSaveClicked; } 
-    private void saveDVD() {
-        try {
-            // Lấy dữ liệu từ form
-            String title = titleTextField.getText().trim();
-            String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-            String dimensions = dimensionsTextField.getText().trim();
-            String weight = weightTextField.getText().trim();
-            String description = descriptionTextArea.getText().trim();
-            double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
-            double price  = Double.parseDouble(importPriceTextField.getText().trim());
-            int quantity = Integer.parseInt(quantityTextField.getText().trim());
-
-            String discType = blurayRadioButton.isSelected() ? "Blu-ray" : "HD-DVD";
-            String director = directorTextField.getText().trim();
-            int runtime = Integer.parseInt(durationTextField.getText().trim());
-            String studio = productionCompanyTextField.getText().trim();
-            String language = (String) languageComboBox.getSelectedItem();
-            String subtitles = (String) subtitleComboBox.getSelectedItem();
-            String releaseDate = releaseDateTextField.getText().trim();
-            String genre = (String) genreComboBox.getSelectedItem();
-
-            // Kiểm tra dữ liệu bắt buộc
-            if (title.isEmpty() || studio.isEmpty() || description.isEmpty() || warehouseEntryDate.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            // Tạo đối tượng DVD
-            DVD DVD = new DVD(0, title, "DVD", value, price, "0", description,
-            quantity, weight, dimensions, warehouseEntryDate,discType,
-            director, runtime, studio, language, subtitles, releaseDate, genre);
-
-            // Gọi DAO để lưu vào database
-            boolean success = DVDDAO.getInstance().addDVD(DVD);
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                isSaveClicked = true;
-                dispose(); // Đóng dialog
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số trang, số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
-        }
-    }
 }
