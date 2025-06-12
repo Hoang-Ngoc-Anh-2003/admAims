@@ -28,5 +28,6 @@ public class MainController {
 
     public void showPanel(String panelName, String title) {
         mainFrame.setMainPanel(panelName, title);
+        mainFrame.updateProductCounts();
     }
 }

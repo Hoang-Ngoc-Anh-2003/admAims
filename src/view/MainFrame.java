@@ -16,15 +16,25 @@ public class MainFrame extends JFrame {
     private int dvdCount;
     private int cdCount;
     private int lpCount;
-    private MainController controller;
+    private MainController mainController;
+    private JButton btnBook;
+    private JButton btnCD;
+    private JButton btnDVD;
+    private JButton btnLP;
+
+    private BookPanel bookPanel;
+    private CDPanel cdPanel;
+    private DVDPanel dvdPanel;
+    private LPPanel lpPanel;
+    private JPanel homePanel;
     
     public MainFrame() {
-        controller = new MainController(this);
+        mainController = new MainController(this);
 
-        bookCount = controller.getBookCount();
-        dvdCount = controller.getDVDCount();
-        cdCount = controller.getCDCount();
-        lpCount = controller.getLPCount();
+        bookCount = mainController.getBookCount();
+        dvdCount = mainController.getDVDCount();
+        cdCount = mainController.getCDCount();
+        lpCount = mainController.getLPCount();
 
         setTitle("AIMS");
         setSize(1200, 700);
@@ -95,14 +105,14 @@ public class MainFrame extends JFrame {
         mainPanel = new JPanel(cardLayout);
         mainPanel.setBackground(new Color(240, 242, 245));
         
-        JPanel homePanel = new JPanel();
+        homePanel = new JPanel();
         homePanel.setLayout(new GridLayout(2, 2, 20, 20));
         homePanel.setBackground(new Color(240, 242, 245));
         
-        JButton btnBook = createCategoryButton("Book", bookCount);
-        JButton btnDVD = createCategoryButton("DVD", dvdCount);
-        JButton btnCD = createCategoryButton("CD", cdCount);
-        JButton btnLP = createCategoryButton("LP", lpCount);
+        btnBook = createCategoryButton("Book", bookCount);
+        btnDVD = createCategoryButton("DVD", dvdCount);
+        btnCD = createCategoryButton("CD", cdCount);
+        btnLP = createCategoryButton("LP", lpCount);
         
         homePanel.add(btnBook);
         homePanel.add(btnDVD);
@@ -110,10 +120,10 @@ public class MainFrame extends JFrame {
         homePanel.add(btnLP);
         
         // them trang danh sach
-        BookPanel bookPanel = new BookPanel();
-        CDPanel cdPanel = new CDPanel();
-        DVDPanel dvdPanel = new DVDPanel();
-        LPPanel lpPanel = new LPPanel();
+        bookPanel = new BookPanel();
+        cdPanel = new CDPanel();
+        dvdPanel = new DVDPanel();
+        lpPanel = new LPPanel();
         
         mainPanel.add(homePanel, "Home");
         mainPanel.add(bookPanel, "Books");
@@ -121,7 +131,7 @@ public class MainFrame extends JFrame {
         mainPanel.add(cdPanel, "CDs");
         mainPanel.add(lpPanel, "LPs");
         
-        btnHome.addActionListener(e -> controller.showPanel("Home", "Trang chủ"));
+        btnHome.addActionListener(e -> mainController.showPanel("Home", "Trang chủ"));
         // btnHome.addActionListener(e -> switchPanel("Home", "Trang chủ"));
         btnBooks.addActionListener(e -> switchPanel("Books", "Danh sách Book"));
         btnDVDs.addActionListener(e -> switchPanel("DVDs", "Danh sách DVD"));
@@ -172,5 +182,20 @@ public class MainFrame extends JFrame {
     public void setMainPanel(String panelName, String title) {
     cardLayout.show(mainPanel, panelName);
     lblTitle.setText(title);
+    }
+
+    public void updateProductCounts(){
+        bookCount = mainController.getBookCount();
+        dvdCount = mainController.getDVDCount();
+        cdCount = mainController.getCDCount();
+        lpCount = mainController.getLPCount();
+
+        btnBook.setText("<html><center>Book<br>" + bookCount + "</center></html>");
+        btnDVD.setText("<html><center>DVD<br>" + dvdCount + "</center></html>");
+        btnCD.setText("<html><center>CD<br>" + cdCount + "</center></html>");
+        btnLP.setText("<html><center>LP<br>" + lpCount + "</center></html>");
+
+        homePanel.revalidate(); // Tái tính toán lại layout của homePanel
+        homePanel.repaint();    // Yêu cầu vẽ lại homePanel
     }
 }
