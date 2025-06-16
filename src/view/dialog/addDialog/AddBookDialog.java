@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import view.component.ButtonUI.*;
-import controller.DialogControler.AddControler.AddProductController;
+import controller.DialogControler.AddProductController;
 
 import javax.swing.border.TitledBorder;
 

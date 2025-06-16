@@ -2,6 +2,7 @@ import javax.swing.UIManager;
 import javax.swing.SwingUtilities;
 
 import view.MainFrame;
+import controller.MainController;
 
 public class App {
     public static void main(String[] args) {
@@ -13,7 +14,10 @@ public class App {
         }
 
         SwingUtilities.invokeLater(() -> {
-            new MainFrame();
+            MainFrame mainFrame = new MainFrame();
+            MainController controller = new MainController(mainFrame);
+            controller.setupEventListeners();
+            mainFrame.setVisible(true);
         });
     }
 }

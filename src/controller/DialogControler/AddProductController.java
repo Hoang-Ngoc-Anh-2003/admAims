@@ -1,4 +1,4 @@
-package controller.DialogControler.AddControler;
+package controller.DialogControler;
 
 import model.dao.*;
 import model.entity.*;
@@ -24,14 +24,13 @@ public class AddProductController {
                 coverType, publisher, publicationDate, numPages,
                 language, genre);
 
-            // Gọi DAO để lưu vào database
-            // Gọi DAO để lưu vào database
+            // Gọi DAO để lưu vào database            // Gọi DAO để lưu vào database
             boolean success = BookDAO.getInstance().addBook(book);
             if (success) {
-                JOptionPane.showMessageDialog(null, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             } else {
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Lỗi khi lưu vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -61,10 +60,10 @@ public class AddProductController {
             // Gọi DAO để lưu vào database
             boolean success = CDDAO.getInstance().addCD(cd);
             if (success) {
-                JOptionPane.showMessageDialog(null, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             } else {
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Lỗi khi lưu vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -97,10 +96,10 @@ public class AddProductController {
             // Gọi DAO để lưu vào database
             boolean success = DVDDAO.getInstance().addDVD(DVD);
             if (success) {
-                JOptionPane.showMessageDialog(null, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             } else {
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Lỗi khi lưu vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -132,10 +131,10 @@ public class AddProductController {
             // Gọi DAO để lưu vào database
             boolean success = LPDAO.getInstance().addLP(LP);
             if (success) {
-                JOptionPane.showMessageDialog(null, "Thêm sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
                 return true;
             } else {
-                JOptionPane.showMessageDialog(null, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Lỗi khi lưu vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
                 return false;
             }
         } catch (NumberFormatException e) {

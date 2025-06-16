@@ -16,7 +16,6 @@ public class BookController {
         this.bookPanel = bookPanel;
     }
 
-
     public void loadBooks() {
         List<Book> books = bookDAO.getAllBooks();
         bookPanel.updateBookTable(books);

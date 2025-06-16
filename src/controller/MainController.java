@@ -1,13 +1,35 @@
 package controller;
 
+import Interface.IMainView;
 import model.dao.*;
-import view.MainFrame;
 
 public class MainController {
-    private MainFrame mainFrame;
+    private final IMainView mainView;
 
-    public MainController(MainFrame mainFrame) {
-        this.mainFrame = mainFrame;
+    public MainController(IMainView mainView) {
+        this.mainView = mainView;
+    }
+    
+    public void setupEventListeners() {
+        mainView.setHomeButtonListener(e -> showPanel("Home", "Trang chủ"));
+        mainView.setBooksButtonListener(e -> showPanel("Books", "Danh sách Book"));
+        mainView.setDVDsButtonListener(e -> showPanel("DVDs", "Danh sách DVD"));
+        mainView.setCDsButtonListener(e -> showPanel("CDs", "Danh sách CD"));
+        mainView.setLPsButtonListener(e -> showPanel("LPs", "Danh sách LP"));
+        updateProductCounts();
+    }
+
+    private void showPanel(String panelName, String title) {
+        mainView.setMainPanel(panelName, title);
+        updateProductCounts();
+    }
+
+    private void updateProductCounts() {
+        int books = BookDAO.getProductCount("Books");
+        int dvds = DVDDAO.getProductCount("DVDs");
+        int cds = CDDAO.getProductCount("CDs");
+        int lps = LPDAO.getProductCount("LPs");
+        mainView.updateProductCounts(books, dvds, cds, lps);
     }
 
     public int getBookCount() {
@@ -24,10 +46,5 @@ public class MainController {
 
     public int getLPCount() {
         return LPDAO.getProductCount("LPs");
-    }
-
-    public void showPanel(String panelName, String title) {
-        mainFrame.setMainPanel(panelName, title);
-        mainFrame.updateProductCounts();
     }
 }

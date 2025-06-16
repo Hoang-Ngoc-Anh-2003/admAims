@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import Interface.ReloadablePanel;
-import controller.ProductController;
+import controller.EditProductController;
 import view.component.ButtonUI.*;
 
 // xử lý sự kiện button update/deletedelete
@@ -31,7 +31,7 @@ public class EditButtonAction extends AbstractCellEditor implements TableCellEdi
                 int productId = (int) table.getModel().getValueAt(selectedRow, 0);
                 JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(table);
 
-                ProductController.openEditDialog(productId, parentFrame, reloadablePanel);
+                EditProductController.openEditDialog(productId, parentFrame, reloadablePanel);
             }
         });
 

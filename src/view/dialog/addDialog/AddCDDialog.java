@@ -10,7 +10,7 @@ import view.component.ButtonUI.*;
 
 import javax.swing.border.TitledBorder;
 
-import controller.DialogControler.AddControler.AddProductController;
+import controller.DialogControler.AddProductController;
 
 public class AddCDDialog extends JDialog {
 

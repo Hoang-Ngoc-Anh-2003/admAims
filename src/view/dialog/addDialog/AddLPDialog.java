@@ -10,7 +10,7 @@ import view.component.ButtonUI.*;
 
 import javax.swing.border.TitledBorder;
 
-import controller.DialogControler.AddControler.AddProductController;
+import controller.DialogControler.AddProductController;
 
 public class AddLPDialog extends JDialog { 
 
@@ -18,9 +18,9 @@ public class AddLPDialog extends JDialog {
     private JTextField artistTextField;
     private JTextField recordLabelTextField;
     private JTextField genreTextField;
-    private JFormattedTextField releaseDateTextField; // Sử dụng JFormattedTextField cho định dạng ngày
+    private JFormattedTextField releaseDateTextField;
     private JTextArea trackListTextArea;
-    private JFormattedTextField importDateTextField; // Sử dụng JFormattedTextField cho định dạng ngày
+    private JFormattedTextField importDateTextField;
     private JTextField quantityTextField;
     private JTextField dimensionsTextField;
     private JTextField weightTextField;
