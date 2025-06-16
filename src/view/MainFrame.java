@@ -167,21 +167,25 @@ public class MainFrame extends JFrame implements IMainView {
     @Override
     public void setBooksButtonListener(ActionListener listener) {
         btnBooks.addActionListener(listener);
+        btnBook.addActionListener(listener);
     }
 
     @Override
     public void setDVDsButtonListener(ActionListener listener) {
         btnDVDs.addActionListener(listener);
+        btnDVD.addActionListener(listener);
     }
 
     @Override
     public void setCDsButtonListener(ActionListener listener) {
         btnCDs.addActionListener(listener);
+        btnCD.addActionListener(listener);
     }
 
     @Override
     public void setLPsButtonListener(ActionListener listener) {
         btnLPs.addActionListener(listener);
+        btnLP.addActionListener(listener);
     }
 
     @Override
