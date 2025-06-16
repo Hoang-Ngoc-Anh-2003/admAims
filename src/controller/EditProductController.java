@@ -7,7 +7,7 @@ import Interface.ReloadablePanel;
 
 import javax.swing.*;
 
-public class ProductController {
+public class EditProductController {
 
     public static void openEditDialog(int productId, JFrame parentFrame, ReloadablePanel reloadablePanel) {
         String category = ProductDAO.getInstance().getProductCategory(productId);

@@ -1,30 +1,42 @@
 package view;
 
 import javax.swing.*;
-
-import controller.MainController;
-import view.Panel.*;
-
 import java.awt.*;
+import java.awt.event.ActionListener;
 
-public class MainFrame extends JFrame {
+import view.Panel.*;
+import Interface.*;
+
+public class MainFrame extends JFrame implements IMainView {
 	private static final long serialVersionUID = 1L; 
+
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private JLabel lblTitle;
+
     private int bookCount;
     private int dvdCount;
     private int cdCount;
     private int lpCount;
-    private MainController controller;
+
+    private JButton btnHome;
+    private JButton btnBooks;
+    private JButton btnCDs;
+    private JButton btnDVDs;
+    private JButton btnLPs;
+
+    private JButton btnBook;
+    private JButton btnCD;
+    private JButton btnDVD;
+    private JButton btnLP;
+
+    private BookPanel bookPanel;
+    private CDPanel cdPanel;
+    private DVDPanel dvdPanel;
+    private LPPanel lpPanel;
+    private JPanel homePanel;
     
     public MainFrame() {
-        controller = new MainController(this);
-
-        bookCount = controller.getBookCount();
-        dvdCount = controller.getDVDCount();
-        cdCount = controller.getCDCount();
-        lpCount = controller.getLPCount();
 
         setTitle("AIMS");
         setSize(1200, 700);
@@ -42,17 +54,17 @@ public class MainFrame extends JFrame {
         
         Font sidebarFont = new Font("Arial", Font.BOLD, 14);
 
-        JButton btnHome = createSidebarButton("     \uD83C\uDFE0    Trang chủ", false);
+        btnHome = createSidebarButton("     \uD83C\uDFE0    Trang chủ", false);
         
         JLabel lblProductManagement = new JLabel("Quản lý sản phẩm");
         lblProductManagement.setFont(sidebarFont);
         lblProductManagement.setForeground(Color.WHITE);
         lblProductManagement.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 10));
         
-        JButton btnBooks = createSidebarButton("     📚     Danh sách Book", false);
-        JButton btnDVDs = createSidebarButton("     🎬     Danh sách DVD", false);
-        JButton btnCDs = createSidebarButton("     🎶     Danh sách CD", false);
-        JButton btnLPs = createSidebarButton("     📻     Danh sách LP", false);
+        btnBooks = createSidebarButton("     📚     Danh sách Book", false);
+        btnDVDs = createSidebarButton("     🎬     Danh sách DVD", false);
+        btnCDs = createSidebarButton("     🎶     Danh sách CD", false);
+        btnLPs = createSidebarButton("     📻     Danh sách LP", false);
         
         sidebar.add(btnHome);
         sidebar.add(lblProductManagement);
@@ -74,7 +86,6 @@ public class MainFrame extends JFrame {
         JLabel lblAims = new JLabel("AIMS", SwingConstants.CENTER);
         lblAims.setForeground(Color.WHITE);
         lblAims.setFont(new Font("Arial", Font.BOLD, 20));
-        
         aimsHeaderPanel.add(lblAims);
         
         // Title panel
@@ -95,14 +106,14 @@ public class MainFrame extends JFrame {
         mainPanel = new JPanel(cardLayout);
         mainPanel.setBackground(new Color(240, 242, 245));
         
-        JPanel homePanel = new JPanel();
+        homePanel = new JPanel();
         homePanel.setLayout(new GridLayout(2, 2, 20, 20));
         homePanel.setBackground(new Color(240, 242, 245));
         
-        JButton btnBook = createCategoryButton("Book", bookCount);
-        JButton btnDVD = createCategoryButton("DVD", dvdCount);
-        JButton btnCD = createCategoryButton("CD", cdCount);
-        JButton btnLP = createCategoryButton("LP", lpCount);
+        btnBook = createCategoryButton("Book", bookCount);
+        btnDVD = createCategoryButton("DVD", dvdCount);
+        btnCD = createCategoryButton("CD", cdCount);
+        btnLP = createCategoryButton("LP", lpCount);
         
         homePanel.add(btnBook);
         homePanel.add(btnDVD);
@@ -110,28 +121,16 @@ public class MainFrame extends JFrame {
         homePanel.add(btnLP);
         
         // them trang danh sach
-        BookPanel bookPanel = new BookPanel();
-        CDPanel cdPanel = new CDPanel();
-        DVDPanel dvdPanel = new DVDPanel();
-        LPPanel lpPanel = new LPPanel();
+        bookPanel = new BookPanel();
+        cdPanel = new CDPanel();
+        dvdPanel = new DVDPanel();
+        lpPanel = new LPPanel();
         
         mainPanel.add(homePanel, "Home");
         mainPanel.add(bookPanel, "Books");
         mainPanel.add(dvdPanel, "DVDs");
         mainPanel.add(cdPanel, "CDs");
         mainPanel.add(lpPanel, "LPs");
-        
-        btnHome.addActionListener(e -> controller.showPanel("Home", "Trang chủ"));
-        // btnHome.addActionListener(e -> switchPanel("Home", "Trang chủ"));
-        btnBooks.addActionListener(e -> switchPanel("Books", "Danh sách Book"));
-        btnDVDs.addActionListener(e -> switchPanel("DVDs", "Danh sách DVD"));
-        btnCDs.addActionListener(e -> switchPanel("CDs", "Danh sách CD"));
-        btnLPs.addActionListener(e -> switchPanel("LPs", "Danh sách LP"));
-        
-        btnBook.addActionListener(e -> switchPanel("Books", "Danh sách Book"));
-        btnDVD.addActionListener(e -> switchPanel("DVDs", "Danh sách DVD"));
-        btnCD.addActionListener(e -> switchPanel("CDs", "Danh sách CD"));
-        btnLP.addActionListener(e -> switchPanel("LPs", "Danh sách LP"));
         
         contentPane.add(sidebar, BorderLayout.WEST);
         contentPane.add(header, BorderLayout.NORTH);
@@ -164,13 +163,57 @@ public class MainFrame extends JFrame {
         return button;
     }
     
-    private void switchPanel(String panelName, String title) {
+    // ---------------- Interface methods -------------
+    @Override
+    public void setBooksButtonListener(ActionListener listener) {
+        btnBooks.addActionListener(listener);
+        btnBook.addActionListener(listener);
+    }
+
+    @Override
+    public void setDVDsButtonListener(ActionListener listener) {
+        btnDVDs.addActionListener(listener);
+        btnDVD.addActionListener(listener);
+    }
+
+    @Override
+    public void setCDsButtonListener(ActionListener listener) {
+        btnCDs.addActionListener(listener);
+        btnCD.addActionListener(listener);
+    }
+
+    @Override
+    public void setLPsButtonListener(ActionListener listener) {
+        btnLPs.addActionListener(listener);
+        btnLP.addActionListener(listener);
+    }
+
+    @Override
+    public void setHomeButtonListener(ActionListener listener) {
+        btnHome.addActionListener(listener);
+    }
+
+    @Override
+    public void setMainPanel(String panelName, String title) {
         cardLayout.show(mainPanel, panelName);
         lblTitle.setText(title);
     }
-    
-    public void setMainPanel(String panelName, String title) {
-    cardLayout.show(mainPanel, panelName);
-    lblTitle.setText(title);
+
+    @Override
+    public void updateProductCounts(int book, int dvd, int cd, int lp){
+        this.bookCount = book;
+        this.dvdCount = dvd;
+        this.cdCount = cd;
+        this.lpCount = lp;        
+        
+        btnBook.setText("<html><center>Book<br>" + bookCount + "</center></html>");
+        btnDVD.setText("<html><center>DVD<br>" + dvdCount + "</center></html>");
+        btnCD.setText("<html><center>CD<br>" + cdCount + "</center></html>");
+        btnLP.setText("<html><center>LP<br>" + lpCount + "</center></html>");
+
+        //reload view
+        homePanel.revalidate();
+        homePanel.repaint();
     }
+
 }

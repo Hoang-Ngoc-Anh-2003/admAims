@@ -1,4 +1,4 @@
-package controller;
+package controller.PanelControler;
 
 import model.dao.*;
 import model.entity.*;

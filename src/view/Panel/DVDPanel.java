@@ -11,18 +11,18 @@ import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.*;
+import controller.PanelControler.DVDController;
 import model.entity.*;
 
 public class DVDPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private DVDController controller;
+    private DVDController dvdController;
 
     public DVDPanel() {
         setLayout(new BorderLayout(10, 10));
-        controller = new DVDController(this);
+        dvdController = new DVDController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -58,7 +58,7 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
 
         JScrollPane scrollPane = new JScrollPane(table);
         // loadDVDs();
-        controller.loadDVDs();
+        dvdController.loadDVDs();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -99,7 +99,7 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
         // });
         btnAdd.addActionListener(e -> {
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(DVDPanel.this);
-            controller.openAddDVDDialog(parentFrame);
+            dvdController.openAddDVDDialog(parentFrame);
         });
     }
 
@@ -127,6 +127,6 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
 
     @Override
     public void reloadData() {
-        controller.loadDVDs();
+        dvdController.loadDVDs();
     }
 }

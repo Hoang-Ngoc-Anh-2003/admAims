@@ -11,18 +11,18 @@ import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.BookController;
+import controller.PanelControler.BookController;
 import model.entity.Book;
 
 public class BookPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private BookController controller;
+    private BookController bookController;
 
     public BookPanel() {
         setLayout(new BorderLayout(10, 10));
-        controller = new BookController(this);
+        bookController = new BookController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Header chứa nút "Thêm Sách"
@@ -61,7 +61,7 @@ public class BookPanel extends JPanel implements ReloadablePanel{
         JScrollPane scrollPane = new JScrollPane(table);
          
         // Load dữ liệu từ database
-        controller.loadBooks();
+        bookController.loadBooks();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -92,7 +92,7 @@ public class BookPanel extends JPanel implements ReloadablePanel{
         // Gắn sự kiện click cho nút "Thêm Sách"
         btnAdd.addActionListener(e -> {
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(BookPanel.this);
-            controller.openAddBookDialog(parentFrame);
+            bookController.openAddBookDialog(parentFrame);
         });
 
     }
@@ -110,7 +110,7 @@ public class BookPanel extends JPanel implements ReloadablePanel{
 
     @Override
     public void reloadData() {
-        controller.loadBooks();
+        bookController.loadBooks();
     }
 
 }

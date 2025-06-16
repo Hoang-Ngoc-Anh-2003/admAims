@@ -11,18 +11,18 @@ import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.*;
+import controller.PanelControler.LPController;
 import model.entity.*;
 
 public class LPPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private LPController controller;
+    private LPController lpController;
 
     public LPPanel() {
         setLayout(new BorderLayout(10, 10));
-        controller = new LPController(this);
+        lpController = new LPController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -58,7 +58,7 @@ public class LPPanel extends JPanel implements ReloadablePanel{
 
         JScrollPane scrollPane = new JScrollPane(table);
         // loadLPs();
-        controller.loadLPs();
+        lpController.loadLPs();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -99,7 +99,7 @@ public class LPPanel extends JPanel implements ReloadablePanel{
         // });
         btnAdd.addActionListener(e -> {
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(LPPanel.this);
-            controller.openAddLPDialog(parentFrame);
+            lpController.openAddLPDialog(parentFrame);
         });
     }
 
@@ -127,6 +127,6 @@ public class LPPanel extends JPanel implements ReloadablePanel{
 
     @Override
     public void reloadData() {
-        controller.loadLPs(); // gọi method load hiện tại
+        lpController.loadLPs(); // gọi method load hiện tại
     }
 }

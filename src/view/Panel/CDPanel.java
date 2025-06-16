@@ -11,7 +11,7 @@ import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.CDController;
+import controller.PanelControler.CDController;
 import model.entity.CD;
 
 // CDPanel - Quản lý danh sách CD
@@ -19,11 +19,11 @@ public class CDPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private CDController controller;
+    private CDController cdController;
 
     public CDPanel() {
         setLayout(new BorderLayout(10, 10));
-        controller = new CDController(this);
+        cdController = new CDController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Header chứa nút "Thêm CD"
@@ -63,7 +63,7 @@ public class CDPanel extends JPanel implements ReloadablePanel{
 
         // Load dữ liệu từ database
         // loadCDs();
-        controller.loadCDs();
+        cdController.loadCDs();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -104,7 +104,7 @@ public class CDPanel extends JPanel implements ReloadablePanel{
         // });
         btnAdd.addActionListener(e -> {
             JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(CDPanel.this);
-            controller.openAddCDDialog(parentFrame);
+            cdController.openAddCDDialog(parentFrame);
         });
     }
 
@@ -133,6 +133,6 @@ public class CDPanel extends JPanel implements ReloadablePanel{
 
     @Override
     public void reloadData() {
-        controller.loadCDs(); // gọi method load hiện tại
+        cdController.loadCDs(); // gọi method load hiện tại
     }
 }

@@ -1,4 +1,4 @@
-package controller;
+package controller.PanelControler;
 
 import model.dao.BookDAO;
 import model.entity.Book;
@@ -15,7 +15,6 @@ public class BookController {
     public BookController(BookPanel bookPanel) {
         this.bookPanel = bookPanel;
     }
-
 
     public void loadBooks() {
         List<Book> books = bookDAO.getAllBooks();
