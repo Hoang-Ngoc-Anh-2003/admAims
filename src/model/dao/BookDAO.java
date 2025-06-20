@@ -114,7 +114,6 @@ public class BookDAO extends ProductDAO {
         return barcode;
     }    
 
-    // Thêm sách mới
     public boolean addBook(Book book) {
         String productSQL = "INSERT INTO Products (title, category, value, price, barcode, description, quantity, weight, dimensions, warehouse_entry_date) " +
                             "VALUES (?, 'book', ?, ?, ?, ?, ?, ?, ?, ?) RETURNING product_id";

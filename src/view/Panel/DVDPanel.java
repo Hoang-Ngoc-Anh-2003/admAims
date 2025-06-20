@@ -6,23 +6,21 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.List;
+import java.awt.event.ActionListener;
 
 import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.PanelControler.DVDController;
 import model.entity.*;
 
 public class DVDPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private DVDController dvdController;
 
     public DVDPanel() {
         setLayout(new BorderLayout(10, 10));
-        dvdController = new DVDController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -57,8 +55,6 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
         actionColumn.setMinWidth(180);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        // loadDVDs();
-        dvdController.loadDVDs();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -85,34 +81,12 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
 
         add(headerPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-
-        //  btnAdd.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(DVDPanel.this);
-        //         AddDVDDialog addDVDDialog = new AddDVDDialog(parentFrame, "Thêm DVD", true); // Thêm title và modal
-        //         addDVDDialog.setVisible(true);
-        //         if (addDVDDialog.isSaveClicked()) {
-        //         loadDVDs();
-        //         }
-        //     }
-        // });
-        btnAdd.addActionListener(e -> {
-            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(DVDPanel.this);
-            dvdController.openAddDVDDialog(parentFrame);
-        });
     }
 
-    // public void loadDVDs() {
-    //     List<DVD> dvds = dvdDAO.getAllDVDs();
-    //     tableModel.setRowCount(0);
-    //     for (DVD dvd : dvds) {
-    //         tableModel.addRow(new Object[]{
-    //             dvd.getProductId(), dvd.getTitle(), dvd.getDirector(),
-    //             dvd.getPrice(), dvd.getQuantity(), ""
-    //         });
-    //     }
-    // }
+    // Phương thức để Controller đăng ký sự kiện cho nút "DVD"
+    public void addAddButtonListener(ActionListener listener) {
+        btnAdd.addActionListener(listener);
+    }
 
     public void updateDVDTable(List<DVD> DVDs) {
         tableModel.setRowCount(0);
@@ -125,8 +99,17 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
         System.out.println("Số lượng DVD: " + DVDs.size());
     }
 
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public DefaultTableModel getTableModel() {
+        return tableModel;
+    }
+
     @Override
     public void reloadData() {
-        dvdController.loadDVDs();
+
     }
 }

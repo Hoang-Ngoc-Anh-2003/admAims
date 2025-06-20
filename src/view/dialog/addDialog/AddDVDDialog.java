@@ -3,14 +3,11 @@ package view.dialog.addDialog;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import view.component.ButtonUI.*;
-
 import javax.swing.border.TitledBorder;
 
-import controller.DialogControler.AddProductController;
 public class AddDVDDialog extends JDialog {
 
     private JTextField titleTextField;
@@ -32,10 +29,8 @@ public class AddDVDDialog extends JDialog {
     private JTextArea descriptionTextArea;
     private JButton cancelButton;
     private JButton saveButton;
-    private boolean isSaveClicked = false;
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
-    private AddProductController addDVDController = new AddProductController();
 
     public AddDVDDialog(JFrame parent, String title, boolean modal) {
         super(parent, title, modal);
@@ -107,7 +102,7 @@ public class AddDVDDialog extends JDialog {
         gbcGeneral.gridx = 0;
         gbcGeneral.gridy = 2;
         gbcGeneral.insets = labelMargin;
-        generalInfoPanel.add(new JLabel("Thời lượng :"), gbcGeneral);
+        generalInfoPanel.add(new JLabel("Thời lượng (phút) :"), gbcGeneral);
 
         gbcGeneral.gridx = 1;
         gbcGeneral.gridy = 2;
@@ -240,7 +235,7 @@ public class AddDVDDialog extends JDialog {
         gbcImport.gridx = 2;
         gbcImport.gridy = 1;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Trọng lượng :"), gbcImport);
+        importInfoPanel.add(new JLabel("Trọng lượng (g) :"), gbcImport);
 
         gbcImport.gridx = 3;
         gbcImport.gridy = 1;
@@ -252,7 +247,7 @@ public class AddDVDDialog extends JDialog {
         gbcImport.gridx = 0;
         gbcImport.gridy = 2;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Giá bán :"), gbcImport);
+        importInfoPanel.add(new JLabel("Giá bán (vnd) :"), gbcImport);
 
         gbcImport.gridx = 1;
         gbcImport.gridy = 2;
@@ -263,7 +258,7 @@ public class AddDVDDialog extends JDialog {
         gbcImport.gridx = 2;
         gbcImport.gridy = 2;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Giá nhập :"), gbcImport);
+        importInfoPanel.add(new JLabel("Giá nhập (vnd) :"), gbcImport);
 
         gbcImport.gridx = 3;
         gbcImport.gridy = 2;
@@ -301,52 +296,70 @@ public class AddDVDDialog extends JDialog {
         buttonPanel.add(saveButton);
         add(buttonPanel, BorderLayout.SOUTH); 
 
-        // Action Listeners cho nút Lưu và Hủy
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Lấy dữ liệu từ form
-                String title = titleTextField.getText().trim();
-                String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-                String dimensions = dimensionsTextField.getText().trim();
-                String weight = weightTextField.getText().trim();
-                String description = descriptionTextArea.getText().trim();
-                double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
-                double price  = Double.parseDouble(importPriceTextField.getText().trim());
-                int quantity = Integer.parseInt(quantityTextField.getText().trim());
-
-                String discType = blurayRadioButton.isSelected() ? "Blu-ray" : "HD-DVD";
-                String director = directorTextField.getText().trim();
-                int runtime = Integer.parseInt(durationTextField.getText().trim());
-                String studio = productionCompanyTextField.getText().trim();
-                String language = (String) languageComboBox.getSelectedItem();
-                String subtitles = (String) subtitleComboBox.getSelectedItem();
-                String releaseDate = releaseDateTextField.getText().trim();
-                String genre = (String) genreComboBox.getSelectedItem();
-
-                // Gọi controller để xử lý lưu
-                isSaveClicked = addDVDController.addDVD(
-                    title, warehouseEntryDate, dimensions, weight, description,
-                    value, price, quantity, discType, director,
-                    runtime, studio, language, subtitles, releaseDate, genre
-                );
-                if (isSaveClicked) {
-                    dispose(); // Đóng dialog nếu lưu thành công
-                }
-            }
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isSaveClicked = false;
-                dispose();
-            }
-        });
-
         pack();
         setLocationRelativeTo(parent);
     }
 
-    public boolean isSaveClicked() { return isSaveClicked; } 
+    // --- Getter methods for form data ---
+    public String getTitle() { return titleTextField.getText().trim();}
+    public String getWarehouseEntryDate() { return importDateTextField.getText().trim();}
+    public String getDimensions() { return dimensionsTextField.getText().trim();}
+    public String getWeight() { return weightTextField.getText().trim();}
+    public String getDescription() { return descriptionTextArea.getText().trim();}
+    public String getValue() { return sellingPriceTextField.getText().trim();}
+    public String getPrice() { return importPriceTextField.getText().trim();}
+    public String getQuantity() { return quantityTextField.getText().trim();}
+    public String getDiscType() { return blurayRadioButton.isSelected() ? "Blu-ray" : "HD-DVD";}
+    public String getDirector() { return directorTextField.getText().trim();}
+    public String getRuntime() { return durationTextField.getText().trim();}
+    public String getStudio() { return productionCompanyTextField.getText().trim(); }
+    public String getLangue() { return (String) languageComboBox.getSelectedItem(); }
+    public String getSubtitles() { return (String) subtitleComboBox.getSelectedItem(); }
+    public String getreleaseDate() { return releaseDateTextField.getText().trim(); }
+    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
+
+    // --- Methods for Controller to register listeners ---
+    public void addSaveButtonListener(ActionListener listener) {
+        saveButton.addActionListener(listener);
+    }
+
+    public void addCancelButtonListener(ActionListener listener) {
+        cancelButton.addActionListener(listener);
+    }
+
+    // --- Methods for Controller to control View behavior ---
+    public void closeDialog() {
+        dispose();
+    }
+
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showWarningMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Thành công", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void clearForm() {
+        titleTextField.setText("");
+        directorTextField.setText("");
+        durationTextField.setText("");
+        productionCompanyTextField.setText("");
+        languageComboBox.setSelectedIndex(0);
+        subtitleComboBox.setSelectedIndex(0);
+        genreComboBox.setSelectedIndex(0);
+        releaseDateTextField.setText("");
+        blurayRadioButton.setSelected(true);
+        importDateTextField.setText("");
+        quantityTextField.setText("");
+        dimensionsTextField.setText("");
+        weightTextField.setText("");
+        sellingPriceTextField.setText("");
+        importPriceTextField.setText("");
+        descriptionTextArea.setText("");
+    }
 }

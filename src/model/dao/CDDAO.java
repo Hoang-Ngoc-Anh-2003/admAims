@@ -143,7 +143,11 @@ public class CDDAO extends ProductDAO {
                 cdStmt.setString(3, cd.getRecordLabel());
                 cdStmt.setString(4, cd.getTracklist());
                 cdStmt.setString(5, cd.getGenre());
-                cdStmt.setDate(6, java.sql.Date.valueOf(cd.getReleaseDate()));
+                if (cd.getReleaseDate() != null && !cd.getReleaseDate().isEmpty()) {
+                    cdStmt.setDate(6, java.sql.Date.valueOf(cd.getReleaseDate()));
+                } else {
+                    cdStmt.setNull(6, java.sql.Types.DATE);
+                }
     
                 return cdStmt.executeUpdate() > 0;
             }

@@ -5,19 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 
 import view.Panel.*;
-import Interface.*;
 
-public class MainFrame extends JFrame implements IMainView {
+public class MainFrame extends JFrame {
 	private static final long serialVersionUID = 1L; 
 
     private JPanel mainPanel;
     private CardLayout cardLayout;
     private JLabel lblTitle;
-
-    private int bookCount;
-    private int dvdCount;
-    private int cdCount;
-    private int lpCount;
 
     private JButton btnHome;
     private JButton btnBooks;
@@ -37,7 +31,6 @@ public class MainFrame extends JFrame implements IMainView {
     private JPanel homePanel;
     
     public MainFrame() {
-
         setTitle("AIMS");
         setSize(1200, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -110,10 +103,10 @@ public class MainFrame extends JFrame implements IMainView {
         homePanel.setLayout(new GridLayout(2, 2, 20, 20));
         homePanel.setBackground(new Color(240, 242, 245));
         
-        btnBook = createCategoryButton("Book", bookCount);
-        btnDVD = createCategoryButton("DVD", dvdCount);
-        btnCD = createCategoryButton("CD", cdCount);
-        btnLP = createCategoryButton("LP", lpCount);
+        btnBook = createCategoryButton("Book", 0);
+        btnDVD = createCategoryButton("DVD", 0);
+        btnCD = createCategoryButton("CD", 0);
+        btnLP = createCategoryButton("LP", 0);
         
         homePanel.add(btnBook);
         homePanel.add(btnDVD);
@@ -163,57 +156,73 @@ public class MainFrame extends JFrame implements IMainView {
         return button;
     }
     
-    // ---------------- Interface methods -------------
-    @Override
-    public void setBooksButtonListener(ActionListener listener) {
+     public void addBooksButtonListener(ActionListener listener) {
         btnBooks.addActionListener(listener);
+    }
+
+    public void addBookCategoryButtonListener(ActionListener listener) {
         btnBook.addActionListener(listener);
     }
 
-    @Override
-    public void setDVDsButtonListener(ActionListener listener) {
+    public void addDVDsButtonListener(ActionListener listener) {
         btnDVDs.addActionListener(listener);
+    }
+
+    public void addDVDCategoryButtonListener(ActionListener listener) {
         btnDVD.addActionListener(listener);
     }
 
-    @Override
-    public void setCDsButtonListener(ActionListener listener) {
+    public void addCDsButtonListener(ActionListener listener) {
         btnCDs.addActionListener(listener);
+    }
+
+    public void addCDCategoryButtonListener(ActionListener listener) {
         btnCD.addActionListener(listener);
     }
 
-    @Override
-    public void setLPsButtonListener(ActionListener listener) {
+    public void addLPsButtonListener(ActionListener listener) {
         btnLPs.addActionListener(listener);
+    }
+
+    public void addLPCategoryButtonListener(ActionListener listener) {
         btnLP.addActionListener(listener);
     }
 
-    @Override
-    public void setHomeButtonListener(ActionListener listener) {
+    public void addHomeButtonListener(ActionListener listener) {
         btnHome.addActionListener(listener);
     }
 
-    @Override
-    public void setMainPanel(String panelName, String title) {
+    public void showPanel(String panelName, String title) {
         cardLayout.show(mainPanel, panelName);
         lblTitle.setText(title);
     }
 
-    @Override
-    public void updateProductCounts(int book, int dvd, int cd, int lp){
-        this.bookCount = book;
-        this.dvdCount = dvd;
-        this.cdCount = cd;
-        this.lpCount = lp;        
-        
-        btnBook.setText("<html><center>Book<br>" + bookCount + "</center></html>");
-        btnDVD.setText("<html><center>DVD<br>" + dvdCount + "</center></html>");
-        btnCD.setText("<html><center>CD<br>" + cdCount + "</center></html>");
-        btnLP.setText("<html><center>LP<br>" + lpCount + "</center></html>");
+    public void updateHomeProductCounts(int book, int dvd, int cd, int lp){
+        btnBook.setText("<html><center>Book<br>" + book  + "</center></html>");
+        btnDVD.setText("<html><center>DVD<br>" + dvd  + "</center></html>");
+        btnCD.setText("<html><center>CD<br>" + cd  + "</center></html>");
+        btnLP.setText("<html><center>LP<br>" + lp  + "</center></html>");
 
-        //reload view
-        homePanel.revalidate();
-        homePanel.repaint();
+        // Đảm bảo HomePanel được cập nhật trên UI thread
+        SwingUtilities.invokeLater(() -> {
+            homePanel.revalidate();
+            homePanel.repaint();
+        });
     }
 
+    public BookPanel getBookPanel() {
+        return bookPanel;
+    }
+
+    public CDPanel getCDPanel() {
+        return cdPanel;
+    }
+
+    public DVDPanel getDVDPanel() {
+        return dvdPanel;
+    }
+
+    public LPPanel getLPPanel() {
+        return lpPanel;
+    }
 }

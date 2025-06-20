@@ -3,12 +3,9 @@ package view.dialog.addDialog;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import view.component.ButtonUI.*;
-import controller.DialogControler.AddProductController;
-
 import javax.swing.border.TitledBorder;
 
 public class AddBookDialog extends JDialog {
@@ -31,11 +28,8 @@ public class AddBookDialog extends JDialog {
     private JTextArea descriptionTextArea;
     private JButton cancelButton;
     private JButton saveButton;
-    private boolean isSaveClicked = false;
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
-
-    private AddProductController addBookController = new AddProductController();
 
     public AddBookDialog(JFrame parent, String title, boolean modal) {
         super(parent, title, modal);
@@ -295,50 +289,68 @@ public class AddBookDialog extends JDialog {
         buttonPanel.add(saveButton);
         add(buttonPanel, BorderLayout.SOUTH); 
 
-        // Action Listeners cho nút Lưu và Hủy
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Lấy dữ liệu từ form
-                String title = bookTitleTextField.getText().trim();
-                String authors = authorTextField.getText().trim();
-                String publisher = publisherTextField.getText().trim();
-                int numPages = Integer.parseInt(pageCountTextField.getText().trim());
-                String language = (String) languageComboBox.getSelectedItem();
-                String genre = (String) genreComboBox.getSelectedItem();
-                String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
-                String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
-                String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-                int quantity = Integer.parseInt(quantityTextField.getText().trim());
-                String dimensions = dimensionsTextField.getText().trim();
-                String weight = weightTextField.getText().trim();
-                double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
-                double price  = Double.parseDouble(importPriceTextField.getText().trim());
-                String description = descriptionTextArea.getText().trim();
-                
-                // Gọi controller để xử lý lưu
-                isSaveClicked = addBookController.addBook(
-                    title, authors, publisher, numPages, language, genre,
-                    publicationDate, coverType, warehouseEntryDate, quantity,
-                    dimensions, weight, value, price, description
-                );
-                if (isSaveClicked) {
-                    dispose(); // Đóng dialog nếu lưu thành công
-                }
-            }
-        });
-
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isSaveClicked = false;
-                dispose();
-            }
-        });
-
         pack();
         setLocationRelativeTo(parent);
     }
 
-    public boolean isSaveClicked() { return isSaveClicked; }
+    // --- Getter methods for form data ---
+    public String getTitle() { return bookTitleTextField.getText().trim(); }
+    public String getAuthor() { return authorTextField.getText().trim(); }
+    public String getPublisher() { return publisherTextField.getText().trim(); }
+    public String getPageCount() { return pageCountTextField.getText().trim(); }
+    public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
+    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
+    public String getPublishDate() { return publishDateTextField.getText().trim(); }
+    public String getCoverType() { return paperbackRadioButton.isSelected() ? "paperback" : "hardcover"; }
+    public String getImportDate() { return importDateTextField.getText().trim(); }
+    public String getQuantity() { return quantityTextField.getText().trim(); }
+    public String getDimensions() { return dimensionsTextField.getText().trim(); }
+    public String getWeight() { return weightTextField.getText().trim(); }
+    public String getSellingPrice() { return sellingPriceTextField.getText().trim(); }
+    public String getImportPrice() { return importPriceTextField.getText().trim(); }
+    public String getDescription() { return descriptionTextArea.getText().trim(); }
+
+    // --- Methods for Controller to register listeners ---
+    public void addSaveButtonListener(ActionListener listener) {
+        saveButton.addActionListener(listener);
+    }
+
+    public void addCancelButtonListener(ActionListener listener) {
+        cancelButton.addActionListener(listener);
+    }
+
+    // --- Methods for Controller to control View behavior ---
+    public void closeDialog() {
+        dispose();
+    }
+
+    public void showErrorMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showWarningMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public void showSuccessMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Thành công", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void clearForm() {
+        bookTitleTextField.setText("");
+        authorTextField.setText("");
+        publisherTextField.setText("");
+        pageCountTextField.setText("");
+        languageComboBox.setSelectedIndex(0);
+        genreComboBox.setSelectedIndex(0);
+        publishDateTextField.setText("");
+        paperbackRadioButton.setSelected(true);
+        importDateTextField.setText("");
+        quantityTextField.setText("");
+        dimensionsTextField.setText("");
+        weightTextField.setText("");
+        sellingPriceTextField.setText("");
+        importPriceTextField.setText("");
+        descriptionTextArea.setText("");
+    }
 }
