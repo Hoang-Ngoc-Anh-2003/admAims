@@ -35,18 +35,18 @@ public class AddLPController {
 
     public boolean handleAddLP() {
         String title = addLPDialog.getTitleLP();
-        String warehouseEntryDate = addLPDialog.getArtist();
-        String dimensions = addLPDialog.getRecordLabel();
-        String weight = addLPDialog.getGenre();
-        String description = addLPDialog.getReleaseDate();
-        String valueStr = addLPDialog.getTrackList();
-        String priceStr = addLPDialog.getImportDate();
+        String warehouseEntryDate = addLPDialog.getImportDate();
+        String dimensions = addLPDialog.getDimensions();
+        String weight = addLPDialog.getWeight();
+        String description = addLPDialog.getDescription();
+        String valueStr = addLPDialog.getSellingPrice();
+        String priceStr = addLPDialog.getImportPrice();
         String quantityStr = addLPDialog.getQuantity();
-        String artists = addLPDialog.getDimensions();
-        String recordLabel = addLPDialog.getWeight();
-        String tracklist = addLPDialog.getSellingPrice();
-        String genre = addLPDialog.getImportPrice();
-        String releaseDate = addLPDialog.getDescription();
+        String artists = addLPDialog.getArtist();
+        String recordLabel = addLPDialog.getRecordLabel();
+        String tracklist = addLPDialog.getTrackList();
+        String genre = addLPDialog.getGenre();
+        String releaseDate = addLPDialog.getReleaseDate();
 
         if (title.isEmpty() || artists.isEmpty() || recordLabel.isEmpty() || tracklist.isEmpty() || warehouseEntryDate.isEmpty() ||
             quantityStr.isEmpty() || valueStr.isEmpty() || priceStr.isEmpty() || genre.isEmpty()) {
@@ -63,7 +63,7 @@ public class AddLPController {
             value = Double.parseDouble(valueStr);
             price = Double.parseDouble(priceStr);
         } catch (NumberFormatException e) {
-            addLPDialog.showErrorMessage("Vui lòng nhập đúng định dạng số cho Số lượng, Giá bán, Giá nhập và Trọng lượng.");
+            addLPDialog.showErrorMessage("Vui lòng nhập đúng định dạng số cho Số lượng, Giá bán, Giá nhập");
             return false;
         }
 

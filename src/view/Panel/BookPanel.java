@@ -96,7 +96,6 @@ public class BookPanel extends JPanel implements ReloadablePanel{
                     book.getPrice(), book.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng book: " + books.size());
     }
 
     public JTable getTable() {

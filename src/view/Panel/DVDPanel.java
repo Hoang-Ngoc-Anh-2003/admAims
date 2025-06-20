@@ -96,7 +96,6 @@ public class DVDPanel extends JPanel implements ReloadablePanel{
                     dvd.getPrice(), dvd.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng DVD: " + DVDs.size());
     }
 
 

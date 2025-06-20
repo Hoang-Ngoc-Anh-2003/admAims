@@ -99,7 +99,6 @@ public class CDPanel extends JPanel implements ReloadablePanel{
                     cd.getPrice(), cd.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng CD: " + CDs.size());
     }
 
 

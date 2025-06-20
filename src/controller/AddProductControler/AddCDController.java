@@ -40,7 +40,7 @@ public class AddCDController {
         String weight = addCDDialog.getWeight();
         String description = addCDDialog.getDescription();
         String valueStr = addCDDialog.getSellingPrice();
-        String priceStr = addCDDialog.getImportDate();
+        String priceStr = addCDDialog.getImportPrice();
         String quantityStr = addCDDialog.getQuantity();
         String artists = addCDDialog.getArtist();
         String recordLabel = addCDDialog.getRecordLabel();
@@ -63,7 +63,7 @@ public class AddCDController {
             value = Double.parseDouble(valueStr);
             price = Double.parseDouble(priceStr);
         } catch (NumberFormatException e) {
-            addCDDialog.showErrorMessage("Vui lòng nhập đúng định dạng số cho Số lượng, Giá bán, Giá nhập và Trọng lượng.");
+            addCDDialog.showErrorMessage("Vui lòng nhập đúng định dạng số cho Số lượng, Giá bán, Giá nhập.");
             return false;
         }
 

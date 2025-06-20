@@ -96,7 +96,6 @@ public class LPPanel extends JPanel implements ReloadablePanel{
                     lp.getPrice(), lp.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng LP: " + LPs.size());
     }
 
 

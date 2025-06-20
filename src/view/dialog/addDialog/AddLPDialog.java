@@ -183,7 +183,7 @@ public class AddLPDialog extends JDialog {
         gbcImport.gridx = 2;
         gbcImport.gridy = 1;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Trọng lượng :"), gbcImport);
+        importInfoPanel.add(new JLabel("Trọng lượng (g) :"), gbcImport);
 
         gbcImport.gridx = 3;
         gbcImport.gridy = 1;
@@ -195,7 +195,7 @@ public class AddLPDialog extends JDialog {
         gbcImport.gridx = 0;
         gbcImport.gridy = 2;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Giá bán :"), gbcImport);
+        importInfoPanel.add(new JLabel("Giá bán (vnd) :"), gbcImport);
 
         gbcImport.gridx = 1;
         gbcImport.gridy = 2;
@@ -206,7 +206,7 @@ public class AddLPDialog extends JDialog {
         gbcImport.gridx = 2;
         gbcImport.gridy = 2;
         gbcImport.insets = labelMargin;
-        importInfoPanel.add(new JLabel("Giá nhập :"), gbcImport);
+        importInfoPanel.add(new JLabel("Giá nhập (vnd) :"), gbcImport);
 
         gbcImport.gridx = 3;
         gbcImport.gridy = 2;
