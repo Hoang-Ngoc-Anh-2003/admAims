@@ -6,23 +6,21 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.List;
+import java.awt.event.ActionListener;
 
 import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.PanelControler.LPController;
 import model.entity.*;
 
 public class LPPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private LPController lpController;
 
     public LPPanel() {
         setLayout(new BorderLayout(10, 10));
-        lpController = new LPController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -57,8 +55,6 @@ public class LPPanel extends JPanel implements ReloadablePanel{
         actionColumn.setMinWidth(180);
 
         JScrollPane scrollPane = new JScrollPane(table);
-        // loadLPs();
-        lpController.loadLPs();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -85,34 +81,12 @@ public class LPPanel extends JPanel implements ReloadablePanel{
 
         add(headerPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
-
-        // btnAdd.addActionListener(new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(LPPanel.this);
-        //         AddLPDialog addLPDialog = new AddLPDialog(parentFrame, "Thêm LP", true); // Thêm title và modal
-        //         addLPDialog.setVisible(true);
-        //         if (addLPDialog.isSaveClicked()) { 
-        //         loadLPs();
-        //         }
-        //     }
-        // });
-        btnAdd.addActionListener(e -> {
-            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(LPPanel.this);
-            lpController.openAddLPDialog(parentFrame);
-        });
     }
 
-    // public void loadLPs() {
-    //     List<LP> lps = lpDAO.getAllLPs();
-    //     tableModel.setRowCount(0);
-    //     for (LP lp : lps) {
-    //         tableModel.addRow(new Object[]{
-    //             lp.getProductId(), lp.getTitle(), lp.getArtists(),
-    //             lp.getPrice(), lp.getQuantity(), ""
-    //         });
-    //     }
-    // }
+    // Phương thức để Controller đăng ký sự kiện cho nút "Thêm LP"
+    public void addAddButtonListener(ActionListener listener) {
+        btnAdd.addActionListener(listener);
+    }
 
     public void updateLPTable(List<LP> LPs) {
         tableModel.setRowCount(0);
@@ -122,11 +96,19 @@ public class LPPanel extends JPanel implements ReloadablePanel{
                     lp.getPrice(), lp.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng LP: " + LPs.size());
+    }
+
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public DefaultTableModel getTableModel() {
+        return tableModel;
     }
 
     @Override
     public void reloadData() {
-        lpController.loadLPs(); // gọi method load hiện tại
+
     }
 }

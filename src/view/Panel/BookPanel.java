@@ -6,26 +6,23 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.List;
+import java.awt.event.ActionListener;
 
 import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
 import Interface.ReloadablePanel;
-import controller.PanelControler.BookController;
 import model.entity.Book;
 
 public class BookPanel extends JPanel implements ReloadablePanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
-    private BookController bookController;
 
     public BookPanel() {
         setLayout(new BorderLayout(10, 10));
-        bookController = new BookController(this);
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // Header chứa nút "Thêm Sách"
         JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         btnAdd = new RoundedButton("+ Thêm Sách", 15, new Color(0, 155, 229), new Color(0, 104, 190), new Color(0, 104, 190));
         btnAdd.setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -59,9 +56,6 @@ public class BookPanel extends JPanel implements ReloadablePanel{
         actionColumn.setMinWidth(180);
 
         JScrollPane scrollPane = new JScrollPane(table);
-         
-        // Load dữ liệu từ database
-        bookController.loadBooks();
 
         // Đặt renderer để giữ màu nguyên bản ngay cả khi chọn
         for (int i = 0; i < table.getColumnCount(); i++) {
@@ -88,13 +82,10 @@ public class BookPanel extends JPanel implements ReloadablePanel{
 
         add(headerPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
+    }
 
-        // Gắn sự kiện click cho nút "Thêm Sách"
-        btnAdd.addActionListener(e -> {
-            JFrame parentFrame = (JFrame) SwingUtilities.getWindowAncestor(BookPanel.this);
-            bookController.openAddBookDialog(parentFrame);
-        });
-
+    public void addAddButtonListener(ActionListener listener) {
+        btnAdd.addActionListener(listener);
     }
 
     public void updateBookTable(List<Book> books) {
@@ -105,12 +96,18 @@ public class BookPanel extends JPanel implements ReloadablePanel{
                     book.getPrice(), book.getQuantity(), ""
             });
         }
-        System.out.println("Số lượng book: " + books.size());
+    }
+
+    public JTable getTable() {
+        return table;
+    }
+
+    public DefaultTableModel getTableModel() {
+        return tableModel;
     }
 
     @Override
     public void reloadData() {
-        bookController.loadBooks();
-    }
 
+    }
 }

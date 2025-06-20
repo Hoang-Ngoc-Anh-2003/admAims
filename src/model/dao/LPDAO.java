@@ -185,7 +185,11 @@ public class LPDAO extends ProductDAO {
                 lpStmt.setString(3, lp.getRecordLabel());
                 lpStmt.setString(4, lp.getTracklist());
                 lpStmt.setString(5, lp.getGenre());
-                lpStmt.setDate(6, java.sql.Date.valueOf(lp.getReleaseDate()));
+                if (lp.getReleaseDate() != null && !lp.getReleaseDate().isEmpty()) {
+                    lpStmt.setDate(6, java.sql.Date.valueOf(lp.getReleaseDate()));
+                } else {
+                    lpStmt.setNull(6, java.sql.Types.DATE);
+                }
     
                 return lpStmt.executeUpdate() > 0;
             }

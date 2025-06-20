@@ -232,7 +232,11 @@ public class DVDDAO extends ProductDAO {
                 dvdStmt.setString(5, dvd.getStudio());
                 dvdStmt.setString(6, dvd.getLanguage());
                 dvdStmt.setString(7, dvd.getSubtitles());
-                dvdStmt.setDate(8, java.sql.Date.valueOf(dvd.getReleaseDate()));
+                if (dvd.getReleaseDate() != null && !dvd.getReleaseDate().isEmpty()) {
+                    dvdStmt.setDate(8, java.sql.Date.valueOf(dvd.getReleaseDate()));
+                } else {
+                    dvdStmt.setNull(8, java.sql.Types.DATE);
+                }
                 dvdStmt.setString(9, dvd.getGenre());
     
                 return dvdStmt.executeUpdate() > 0;
