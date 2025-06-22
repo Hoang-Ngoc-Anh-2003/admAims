@@ -3,12 +3,9 @@ package view.dialog.editDialog;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import view.component.ButtonUI.*;
-import model.dao.*;
-import model.entity.Book;
+import model.entity.*;
 
 import javax.swing.border.TitledBorder;
 
@@ -32,7 +29,6 @@ public class EditBookDialog extends JDialog {
     private JTextArea descriptionTextArea;
     private JButton cancelButton;
     private JButton saveButton;
-    private boolean isSaveClicked = false;
     private Book bookToEdit; // Thêm biến để lưu trữ thông tin sách cần sửa
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
@@ -316,84 +312,74 @@ public class EditBookDialog extends JDialog {
         buttonPanel.add(saveButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Action Listeners cho nút Lưu và Hủy
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveEditedBook();
-            }
-        });
+        // Điền dữ liệu ban đầu
+        if (bookToEdit != null) {
+            populateFields(bookToEdit);
+        }
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isSaveClicked = false;
-                dispose();
-            }
-        });
+        // Action Listeners cho nút Hủy
+        cancelButton.addActionListener(e -> dispose());
 
         pack();
         setLocationRelativeTo(parent);
     }
-    public boolean isSaveClicked() { return isSaveClicked; }
-    private void saveEditedBook(){
-        try{
-            // Lấy dữ liệu từ form
-            String title = bookTitleTextField.getText().trim();
-            String authors = authorTextField.getText().trim();
-            String publisher = publisherTextField.getText().trim();
-            int numPages = Integer.parseInt(pageCountTextField.getText().trim());
-            String language = (String) languageComboBox.getSelectedItem();
-            String genre = (String) genreComboBox.getSelectedItem();
-            String publicationDate = publishDateTextField.getText().trim(); // Định dạng: yyyy-MM-dd
-            String coverType = paperbackRadioButton.isSelected() ? "paperback" : "hardcover";
-            String warehouseEntryDate = importDateTextField.getText().trim();  // Định dạng: yyyy-MM-dd
-            int quantity = Integer.parseInt(quantityTextField.getText().trim());
-            String dimensions = dimensionsTextField.getText().trim();
-            String weight = weightTextField.getText().trim();
-            double value  = Double.parseDouble(sellingPriceTextField.getText().trim());
-            double price  = Double.parseDouble(importPriceTextField.getText().trim());
-            String description = descriptionTextArea.getText().trim();
 
-             // Kiểm tra dữ liệu bắt buộc
-             if (title.isEmpty() || authors.isEmpty() || publicationDate.isEmpty() || warehouseEntryDate.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
-                return;
+    // Phương thức để điền dữ liệu từ đối tượng Book vào các trường
+    private void populateFields(Book book) {
+        bookTitleTextField.setText(book.getTitle());
+        authorTextField.setText(book.getAuthors());
+        publisherTextField.setText(book.getPublisher());
+        pageCountTextField.setText(String.valueOf(book.getNumPages()));
+        languageComboBox.setSelectedItem(book.getLanguage());
+        genreComboBox.setSelectedItem(book.getGenre());
+        publishDateTextField.setText(book.getPublicationDate());
+        if (book.getCoverType() != null) { // Check for null before using
+             if (book.getCoverType().equalsIgnoreCase("paperback")) {
+                paperbackRadioButton.setSelected(true);
+            } else if (book.getCoverType().equalsIgnoreCase("hardcover")) {
+                hardcoverRadioButton.setSelected(true);
             }
-            Book book = new Book();
-            book.setProductId(bookToEdit.getProductId());
-            book.setTitle(title);
-            book.setCategory(bookToEdit.getCategory());
-            book.setPrice(price);
-            book.setValue(value);
-            book.setBarcode(bookToEdit.getBarcode());
-            book.setDescription(description);
-            book.setQuantity(quantity);
-            book.setWeight(weight);
-            book.setDimensions(dimensions);
-            book.setWarehouseEntryDate(warehouseEntryDate);
-            book.setAuthors(authors);
-            book.setCoverType(coverType);
-            book.setPublisher(publisher);
-            book.setPublicationDate(publicationDate);
-            book.setNumPages(numPages);
-            book.setLanguage(language);
-            book.setGenre(genre);
-
-            // Gọi DAO để lưu vào database
-            boolean success = BookDAO.getInstance().updateBook(book);
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thông tin sách thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                isSaveClicked = true;
-                dispose(); // Đóng dialog
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi lưu sách vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số trang, số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
+       
+        importDateTextField.setText(book.getWarehouseEntryDate());
+        quantityTextField.setText(String.valueOf(book.getQuantity()));
+        dimensionsTextField.setText(book.getDimensions());
+        weightTextField.setText(book.getWeight());
+        sellingPriceTextField.setText(String.valueOf(book.getValue()));
+        importPriceTextField.setText(String.valueOf(book.getPrice()));
+        descriptionTextArea.setText(book.getDescription());
+    }
+
+    // Các getter để Controller lấy dữ liệu từ form
+    public String getBookTitle() { return bookTitleTextField.getText().trim(); }
+    public String getAuthor() { return authorTextField.getText().trim(); }
+    public String getPublisher() { return publisherTextField.getText().trim(); }
+    public String getPageCount() { return pageCountTextField.getText().trim(); }
+    public String getLanguage() { return (String) languageComboBox.getSelectedItem(); }
+    public String getGenre() { return (String) genreComboBox.getSelectedItem(); }
+    public String getPublishDate() { return publishDateTextField.getText().trim(); }
+    public String getCoverType() { return paperbackRadioButton.isSelected() ? "paperback" : "hardcover"; }
+    public String getImportDate() { return importDateTextField.getText().trim(); }
+    public String getQuantity() { return quantityTextField.getText().trim(); }
+    public String getDimensions() { return dimensionsTextField.getText().trim(); }
+    public String getWeight() { return weightTextField.getText().trim(); }
+    public String getSellingPrice() { return sellingPriceTextField.getText().trim(); }
+    public String getImportPrice() { return importPriceTextField.getText().trim(); }
+    public String getDescription() { return descriptionTextArea.getText().trim(); }
+
+
+    // Phương thức để Controller thêm ActionListener cho nút Save
+    public void addSaveButtonListener(ActionListener listener) {
+        saveButton.addActionListener(listener);
+    }
+    
+    // Phương thức để hiển thị thông báo lỗi
+    public void showErrorMessage(String message, String title) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+    
+    // Phương thức để hiển thị thông báo thành công
+    public void showSuccessMessage(String message, String title) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 }

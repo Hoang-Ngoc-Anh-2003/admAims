@@ -189,7 +189,13 @@ public class CDDAO extends ProductDAO {
             cdStmt.setString(2, cd.getRecordLabel());
             cdStmt.setString(3, cd.getTracklist());
             cdStmt.setString(4, cd.getGenre());
-            cdStmt.setDate(5, java.sql.Date.valueOf(cd.getReleaseDate()));
+
+            if (cd.getReleaseDate() != null && !cd.getReleaseDate().isEmpty()) {
+                cdStmt.setDate(5, java.sql.Date.valueOf(cd.getReleaseDate()));
+            } else {
+                cdStmt.setNull(5, java.sql.Types.DATE);
+            }
+            
             cdStmt.setInt(6, cd.getProductId());
             cdStmt.executeUpdate();
             
@@ -201,6 +207,28 @@ public class CDDAO extends ProductDAO {
         }
     }
 
+    public boolean deleteCD(int productId) {
+        String deleteCDSql = "DELETE FROM Cds WHERE cd_id = ?";
+        String deleteProductSql = "DELETE FROM Products WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement cdStmt = conn.prepareStatement(deleteCDSql);
+             PreparedStatement productStmt = conn.prepareStatement(deleteProductSql)) {
+
+            // Xóa từ bảng Cds trước
+            cdStmt.setInt(1, productId);
+            cdStmt.executeUpdate();
+
+            // Xóa từ bảng Products sau
+            productStmt.setInt(1, productId);
+            productStmt.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     public CD getCDById(int productId) {
         String sql = "SELECT * FROM Products JOIN CDs ON Products.product_id = CDs.product_id WHERE Products.product_id = ?";

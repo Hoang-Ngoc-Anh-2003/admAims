@@ -3,15 +3,11 @@ package view.dialog.editDialog;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import view.component.ButtonUI.*;
-import model.dao.*;
-import model.entity.CD;
+import model.entity.*;
 
 import javax.swing.border.TitledBorder;
-
 
 public class EditCDDialog extends JDialog {
 
@@ -30,7 +26,6 @@ public class EditCDDialog extends JDialog {
     private JTextArea descriptionTextArea;
     private JButton cancelButton;
     private JButton saveButton;
-    private boolean isSaveClicked = false;
     private CD cdToEdit; // Thêm biến để lưu trữ thông tin CD cần sửa
     private final Insets labelMargin = new Insets(10, 10, 10, 15);
     private final Insets fieldMargin = new Insets(10, 0, 10, 15);
@@ -265,83 +260,64 @@ public class EditCDDialog extends JDialog {
         buttonPanel.add(saveButton);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // Action Listeners cho nút Lưu và Hủy
-        saveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                saveEditedCD();
-            }
-        });
+        // Điền dữ liệu ban đầu
+        if (cdToEdit != null) {
+            populateFields(cdToEdit);
+        }
 
-        cancelButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                isSaveClicked = false;
-                dispose();
-            }
-        });
+        // Action Listeners cho nút Hủy
+        cancelButton.addActionListener(e -> dispose());
 
         pack();
         setLocationRelativeTo(parent);
     }
 
-    public boolean isSaveClicked() { return isSaveClicked; }
-    private void saveEditedCD() {
-        try {
-            // Lấy dữ liệu từ form
-            String title = titleTextField.getText().trim();
-            String artists = artistTextField.getText().trim();
-            String recordLabel = recordLabelTextField.getText().trim();
-            String genre = genreTextField.getText().trim();
-            String releaseDate = releaseDateTextField.getText().trim(); // Định dạng: YYYY-MM-DD
-            String tracklist = trackListTextArea.getText().trim();
-            String warehouseEntryDate = importDateTextField.getText().trim(); // Định dạng: YYYY-MM-DD
-            int quantity = Integer.parseInt(quantityTextField.getText().trim());
-            String dimensions = dimensionsTextField.getText().trim();
-            String weight = weightTextField.getText().trim();
-            double value = Double.parseDouble(sellingPriceTextField.getText().trim());
-            double price = Double.parseDouble(importPriceTextField.getText().trim());
-            String description = descriptionTextArea.getText().trim();
-
-            // Kiểm tra dữ liệu bắt buộc
-            if (title.isEmpty() || artists.isEmpty() || recordLabel.isEmpty() || genre.isEmpty() || tracklist.isEmpty() || warehouseEntryDate.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Vui lòng điền đầy đủ các trường bắt buộc.", "Thiếu thông tin", JOptionPane.WARNING_MESSAGE);
-                return;
-            }
-
-            CD cd = new CD();
-            cd.setProductId(cdToEdit.getProductId());
-            cd.setTitle(title);
-            cd.setCategory(cdToEdit.getCategory());
-            cd.setPrice(price);
-            cd.setValue(value);
-            cd.setBarcode(cdToEdit.getBarcode());
-            cd.setDescription(description);
-            cd.setQuantity(quantity);
-            cd.setWeight(weight);
-            cd.setDimensions(dimensions);
-            cd.setWarehouseEntryDate(warehouseEntryDate);
-            cd.setArtists(artists);
-            cd.setRecordLabel(recordLabel);
-            cd.setTracklist(tracklist);
-            cd.setGenre(genre);
-            cd.setReleaseDate(releaseDate.isEmpty() ? null : releaseDate);
-            
-            // Gọi DAO để lưu vào database
-            boolean success = CDDAO.getInstance().updateCD(cd);
-            if (success) {
-                JOptionPane.showMessageDialog(this, "Cập nhật thông tin CD thành công!", "Thành công", JOptionPane.INFORMATION_MESSAGE);
-                isSaveClicked = true;
-                dispose(); // Đóng dialog
-            } else {
-                JOptionPane.showMessageDialog(this, "Lỗi khi cập nhật thông tin CD vào cơ sở dữ liệu.", "Lỗi", JOptionPane.ERROR_MESSAGE);
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(this, "Vui lòng nhập đúng định dạng số cho số lượng, giá và trọng lượng.", "Lỗi định dạng", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Đã xảy ra lỗi: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
+    public void populateFields(CD cd) {
+        if (cd != null) {
+            titleTextField.setText(cd.getTitle());
+            artistTextField.setText(cd.getArtists());
+            recordLabelTextField.setText(cd.getRecordLabel());
+            genreTextField.setText(cd.getGenre());
+            releaseDateTextField.setText(cd.getReleaseDate());
+            trackListTextArea.setText(cd.getTracklist());
+            importDateTextField.setText(cd.getWarehouseEntryDate());
+            quantityTextField.setText(String.valueOf(cd.getQuantity()));
+            dimensionsTextField.setText(cd.getDimensions());
+            weightTextField.setText(cd.getWeight());
+            sellingPriceTextField.setText(String.valueOf(cd.getValue()));
+            importPriceTextField.setText(String.valueOf(cd.getPrice()));
+            descriptionTextArea.setText(cd.getDescription());
         }
+    }
+
+    // --- Getter methods for form data ---
+    public String getTitle() { return titleTextField.getText().trim(); }
+    public String getArtist() { return artistTextField.getText().trim(); }
+    public String getRecordLabel() { return recordLabelTextField.getText().trim(); }
+    public String getGenre() { return genreTextField.getText().trim(); }
+    public String getReleaseDate() { return releaseDateTextField.getText().trim(); }
+    public String getTrackList() { return trackListTextArea.getText().trim(); }
+    public String getImportDate() { return importDateTextField.getText().trim(); }
+    public String getQuantity() { return quantityTextField.getText().trim(); }
+    public String getDimensions() { return dimensionsTextField.getText().trim(); }
+    public String getWeight() { return weightTextField.getText().trim(); }
+    public String getSellingPrice() { return sellingPriceTextField.getText().trim(); }
+    public String getImportPrice() { return importPriceTextField.getText().trim(); }
+    public String getDescription() { return descriptionTextArea.getText().trim(); }
+    
+    // Phương thức để Controller thêm ActionListener cho nút Save
+    public void addSaveButtonListener(ActionListener listener) {
+        saveButton.addActionListener(listener);
+    }
+    
+    // Phương thức để hiển thị thông báo lỗi
+    public void showErrorMessage(String message, String title) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+    }
+    
+    // Phương thức để hiển thị thông báo thành công
+    public void showSuccessMessage(String message, String title) {
+        JOptionPane.showMessageDialog(this, message, title, JOptionPane.INFORMATION_MESSAGE);
     }
 }
     

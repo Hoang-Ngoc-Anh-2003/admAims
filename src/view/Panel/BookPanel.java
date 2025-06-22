@@ -2,19 +2,19 @@ package view.Panel;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
 import java.util.List;
 import java.awt.event.ActionListener;
 
-import view.component.ButtonAction.EditButtonAction;
 import view.component.ButtonUI.*;
 import view.component.CustomTable.CustomTableCellRenderer;
-import Interface.ReloadablePanel;
-import model.entity.Book;
+import model.entity.*;
 
-public class BookPanel extends JPanel implements ReloadablePanel{
+public class BookPanel extends JPanel{
     private JTable table;
     private DefaultTableModel tableModel;
     private JButton btnAdd;
@@ -41,6 +41,7 @@ public class BookPanel extends JPanel implements ReloadablePanel{
                 return column == 5; // Chỉ cho phép chỉnh sửa cột Hành động
             }
         };
+
         table = new JTable(tableModel);
         table.setRowHeight(30);
         table.setIntercellSpacing(new Dimension(10, 5));
@@ -66,14 +67,7 @@ public class BookPanel extends JPanel implements ReloadablePanel{
         table.setSelectionBackground(table.getBackground());
         table.setSelectionForeground(table.getForeground());
 
-
-        // Đặt renderer cho cột cuối cùng (Hành động)
-        // Áp dụng EditButtonRenderer và EditButtonAction
-        table.getColumnModel().getColumn(5).setCellRenderer(new EditButtonRenderer());
-        table.getColumnModel().getColumn(5).setCellEditor(new EditButtonAction(table, this));
-
-
-        
+        // Căn giữa các cột thông tin
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
         for (int i = 0; i < table.getColumnCount() - 1; i++) {
@@ -106,8 +100,10 @@ public class BookPanel extends JPanel implements ReloadablePanel{
         return tableModel;
     }
 
-    @Override
-    public void reloadData() {
-
+    // Phương thức để Controller có thể thiết lập Renderer và Editor
+    public void setActionColumnRendererAndEditor(TableCellRenderer renderer, TableCellEditor editor) {
+        int actionColumnIndex = table.getColumnCount() - 1; // Cột cuối cùng
+        table.getColumnModel().getColumn(actionColumnIndex).setCellRenderer(renderer);
+        table.getColumnModel().getColumn(actionColumnIndex).setCellEditor(editor);
     }
 }

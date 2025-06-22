@@ -212,6 +212,30 @@ public class BookDAO extends ProductDAO {
         }
     }
 
+    public boolean deleteBook(int productId) {
+        // Thứ tự xóa quan trọng: xóa từ bảng con trước, sau đó đến bảng cha
+        String deleteBookSql = "DELETE FROM Books WHERE book_id = ?";
+        String deleteProductSql = "DELETE FROM Products WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement bookStmt = conn.prepareStatement(deleteBookSql);
+             PreparedStatement productStmt = conn.prepareStatement(deleteProductSql)) {
+
+            // Xóa từ bảng Books
+            bookStmt.setInt(1, productId);
+            bookStmt.executeUpdate();
+
+            // Xóa từ bảng Products
+            productStmt.setInt(1, productId);
+            productStmt.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     public Book getBookById(int productId) {
         String sql = "SELECT * FROM Products JOIN Books ON Products.product_id = Books.product_id WHERE Products.product_id = ?";
         try (Connection connection = DatabaseConnection.getConnection();
