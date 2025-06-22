@@ -133,13 +133,42 @@ public class DVDDAO extends ProductDAO {
             dvdStmt.setString(4, dvd.getStudio());
             dvdStmt.setString(5, dvd.getLanguage());
             dvdStmt.setString(6, dvd.getSubtitles());
-            dvdStmt.setDate(7, java.sql.Date.valueOf(dvd.getReleaseDate()));
+            
+            if (dvd.getReleaseDate() != null && !dvd.getReleaseDate().isEmpty()) {
+                dvdStmt.setDate(7, java.sql.Date.valueOf(dvd.getReleaseDate()));
+            } else {
+                dvdStmt.setNull(7, java.sql.Types.DATE);
+            }
+            
             dvdStmt.setString(8, dvd.getGenre());
             dvdStmt.setInt(9, dvd.getProductId());
             dvdStmt.executeUpdate();
 
             return true;
             
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteDVD(int productId) {
+        String deleteDVDsSql = "DELETE FROM Dvds WHERE dvd_id = ?";
+        String deleteProductSql = "DELETE FROM Products WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement dvdsStmt = conn.prepareStatement(deleteDVDsSql);
+             PreparedStatement productStmt = conn.prepareStatement(deleteProductSql)) {
+
+            // Xóa từ bảng Dvds trước
+            dvdsStmt.setInt(1, productId);
+            dvdsStmt.executeUpdate();
+
+            // Xóa từ bảng Products sau
+            productStmt.setInt(1, productId);
+            productStmt.executeUpdate();
+
+            return true;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;

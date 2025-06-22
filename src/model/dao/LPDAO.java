@@ -81,7 +81,11 @@ public class LPDAO extends ProductDAO {
             lpStmt.setString(2, lp.getRecordLabel());
             lpStmt.setString(3, lp.getTracklist());
             lpStmt.setString(4, lp.getGenre());
-            lpStmt.setDate(5, java.sql.Date.valueOf(lp.getReleaseDate()));
+            if (lp.getReleaseDate() != null && !lp.getReleaseDate().isEmpty()) {
+                lpStmt.setDate(5, java.sql.Date.valueOf(lp.getReleaseDate()));
+            } else {
+                lpStmt.setNull(5, java.sql.Types.DATE);
+            }
             lpStmt.setInt(6, lp.getProductId());
 
             lpStmt.executeUpdate();
@@ -92,6 +96,30 @@ public class LPDAO extends ProductDAO {
         }
     }
 
+    public boolean deleteLP(int productId) {
+        String deleteLPSql = "DELETE FROM Lps WHERE lp_id = ?";
+        String deleteProductSql = "DELETE FROM Products WHERE product_id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement lpStmt = conn.prepareStatement(deleteLPSql);
+             PreparedStatement productStmt = conn.prepareStatement(deleteProductSql)) {
+
+            // Xóa từ bảng Lps trước
+            lpStmt.setInt(1, productId);
+            lpStmt.executeUpdate();
+
+            // Xóa từ bảng Products sau
+            productStmt.setInt(1, productId);
+            productStmt.executeUpdate();
+
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    
     // lay danh sach san pham de hien thi tren bang "Panel"
     public List<LP> getAllLPs() {
         List<LP> lps = new ArrayList<>();
