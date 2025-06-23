@@ -301,4 +301,8 @@ public class BookDAO extends ProductDAO {
         return instance;
     }
 
+    // Dùng cho test
+    public static void setMockInstance(BookDAO mock) {
+        instance = mock;
+    }
 }

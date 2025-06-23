@@ -292,4 +292,9 @@ public class LPDAO extends ProductDAO {
         }
         return instance;
     }
+
+    // Dùng cho test
+    public static void setMockInstance(LPDAO mock) {
+        instance = mock;
+    }
 }

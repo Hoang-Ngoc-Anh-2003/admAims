@@ -311,4 +311,8 @@ public class DVDDAO extends ProductDAO {
         return instance;
     }
     
+    // Dùng cho test
+    public static void setMockInstance(DVDDAO mock) {
+        instance = mock;
+    }
 }
