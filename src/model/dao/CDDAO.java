@@ -297,4 +297,8 @@ public class CDDAO extends ProductDAO {
         return instance;
     }
 
+    // Dùng cho test
+    public static void setMockInstance(CDDAO mock) {
+        instance = mock;
+    }
 }
